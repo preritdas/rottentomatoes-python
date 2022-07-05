@@ -4,7 +4,7 @@ This package is for easily getting Rotten Tomatoes scores and other data on movi
 
 You can either call the standalone functions `tomatometer`, `audience_score`, `genres`, etc., or use the `Movie` class to only pass the name and have each attribute be fetched automatically. If you use the `Movie` class, you can print all attributes by printing the object itself, or by accessing each attribute individually. 
 
-The weighted score is calculated using the formula $\frac{2}{3}(tomatometer) + \frac{1}{3}(audience\_score)$. The result is then rounded to the nearest integer.
+The weighted score is calculated using the formula $\frac{2}{3}(tomatometer) + \frac{1}{3}(audience)$. The result is then rounded to the nearest integer.
 
 Basic usage:
 
