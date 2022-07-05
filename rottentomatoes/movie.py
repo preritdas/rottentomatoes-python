@@ -17,5 +17,5 @@ class Movie:
 
     def __str__(self):
         return f"{self.movie_title.title()}. Tomatometer: {self.tomatometer}. " \
-            f"Audience Score: {self.audience_score}. Genres - {self.genres}." \
+            f"Audience Score: {self.audience_score}. Genres - {self.genres}. " \
             f"Weighted score: {self.weighted_score}. "
