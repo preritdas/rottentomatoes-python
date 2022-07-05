@@ -57,6 +57,41 @@ def tomatometer(movie_name: str) -> int:
     return int(rating[0])
 
 
+def audience_score(movie_name: str) -> int:
+    """Returns an integer of the Rotten Tomatoes tomatometer
+    of `movie_name`. 
+
+    Args:
+        movie_name (str): Title of the movie. Case insensitive.
+
+    Raises:
+        LookupError: If the movie isn't found on Rotten Tomatoes.
+        This could be due to a typo in entering the movie's name,
+        duplicates, or other issues.
+
+    Returns:
+        int: Tomatometer of `movie_name`.
+    """
+    rt_url = _movie_url(movie_name)
+
+    response = requests.get(rt_url)
+    content = str(response.content)
+
+    # Test movie exists
+    if content.find('"ratingValue":"')== -1:
+        raise LookupError(
+            "Unable to find that movie on Rotten Tomatoes.", 
+            f"Try this link to source the movie manually: {rt_url}"
+        )
+    location_key = content.find('"audienceScore":')
+    rating_block_location = location_key + len('"audienceScore":')
+    rating_block = content[rating_block_location:rating_block_location+5]
+
+    # Split and parse
+    rating = rating_block.split(',')
+    return int(rating[0])
+
+
 def genres(movie_name: str) -> list[str]:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. Copies the movie url to clipboard.
@@ -86,3 +121,12 @@ def genres(movie_name: str) -> list[str]:
     rating_block = content[rating_block_location:rating_block_location+50]
     genres = rating_block[1:].split(']')[0].split(',')  # list of genres
     return list(map(lambda x: x.replace('"', ''), genres))  # remove quotes from items    
+
+
+def weighted_score(movie_name: str) -> int:
+    """2/3 tomatometer, 1/3 audience score."""
+    return int((2/3) * tomatometer(movie_name) + (1/3) * audience_score(movie_name))
+
+
+if __name__ == '__main__':
+    print(weighted_score('top gun'))
