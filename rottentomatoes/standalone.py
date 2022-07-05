@@ -1,9 +1,10 @@
+"""Standalone functions to fetch attributes about a movie."""
+
 # Non-local imports
 import requests  # interact with RT website
-import pyperclip as pc  # copy link to clipboard
 
 # Project modules
-from exceptions import *
+from .exceptions import *
 
 
 def _movie_url(movie_name: str) -> str:
@@ -24,7 +25,7 @@ def _movie_url(movie_name: str) -> str:
 
 def tomatometer(movie_name: str) -> int:
     """Returns an integer of the Rotten Tomatoes tomatometer
-    of `movie_name`. Copies the movie url to clipboard.
+    of `movie_name`. 
 
     Args:
         movie_name (str): Title of the movie. Case insensitive.
@@ -53,10 +54,35 @@ def tomatometer(movie_name: str) -> int:
     # Split and parse
     no_first_quote = rating_block[1:]
     rating = no_first_quote.split('"')
-    rating = int(rating[0])
+    return int(rating[0])
 
-    # Try to copy url
-    try:
-        pc.copy(rt_url)
-    except Exception as e:
-        raise URLCopyError(e)
+
+def genres(movie_name: str) -> list[str]:
+    """Returns an integer of the Rotten Tomatoes tomatometer
+    of `movie_name`. Copies the movie url to clipboard.
+
+    Args:
+        movie_name (str): Title of the movie. Case insensitive.
+
+    Raises:
+        LookupError: If the movie isn't found on Rotten Tomatoes.
+        This could be due to a typo in entering the movie's name,
+        duplicates, or other issues.
+
+    Returns:
+        list[str]: List of genres.
+    """
+    rt_url = _movie_url(movie_name)
+
+    response = requests.get(rt_url)
+    content = str(response.content)
+    location_key = content.find('"genre":') 
+    if location_key == -1:
+        raise LookupError(
+            "Unable to find that movie on Rotten Tomatoes.", 
+            f"Try this link to source the movie manually: {rt_url}"
+        )
+    rating_block_location = location_key + len('"genre":')
+    rating_block = content[rating_block_location:rating_block_location+50]
+    genres = rating_block[1:].split(']')[0].split(',')  # list of genres
+    return list(map(lambda x: x.replace('"', ''), genres))  # remove quotes from items    

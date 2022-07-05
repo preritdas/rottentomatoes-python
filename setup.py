@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 
-VERSION = "0.0.2"
+VERSION = "0.1.1"
 DESCRIPTION = (
     "Scrapes Rotten Tomatoes's website for basic information on movies."
 )
@@ -22,7 +22,7 @@ setup(
     long_description=read_me(),
     long_description_content_type="text/markdown",
     packages=find_packages(),
-    install_requires = ["requests", "pyperclip"],
+    install_requires = ["requests"],
     keywords=["python", "movies", "rottentomatoes"],
     classifiers=[
         "Programming Language :: Python :: 3",
