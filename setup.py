@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 DESCRIPTION = (
     "Scrapes Rotten Tomatoes's website for basic information on movies."
 )
