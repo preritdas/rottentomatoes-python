@@ -4,7 +4,7 @@
 import requests  # interact with RT website
 
 # Project modules
-from .exceptions import *
+from exceptions import *
 
 
 def _movie_url(movie_name: str) -> str:
@@ -128,5 +128,22 @@ def weighted_score(movie_name: str) -> int:
     return int((2/3) * tomatometer(movie_name) + (1/3) * audience_score(movie_name))
 
 
-if __name__ == '__main__':
-    print(weighted_score('top gun'))
+def rating(movie_name: str) -> str:
+    """Returns a `str` of PG, PG-13, R, etc."""
+    rt_url = _movie_url(movie_name)
+
+    response = requests.get(rt_url)
+    content = str(response.content)
+
+    # Test movie exists
+    if content.find('"ratingValue":"')== -1:
+        raise LookupError(
+            "Unable to find that movie on Rotten Tomatoes.", 
+            f"Try this link to source the movie manually: {rt_url}"
+        )
+    location_key = content.find('"contentRating":"')
+    rating_block_location = location_key + len('"audienceScore":"')
+    rating_block = content[rating_block_location:rating_block_location+5]
+
+    # Split and parse
+    return rating_block.split('"')[0]

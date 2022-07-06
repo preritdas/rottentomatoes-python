@@ -21,6 +21,10 @@ print(rt.audience_score('top gun maverick'))
 # Output: 99
 # Type: int
 
+print(rt.rating('everything everywhere all at once'))
+# Output: R
+# Type: str
+
 print(rt.genres('top gun'))
 # Output: ['Action', 'Adventure']
 # Type: list[str]
@@ -32,7 +36,12 @@ print(rt.weighted_score('happy gilmore'))
 # --- Using the Movie class ---
 movie = rt.Movie('top gun')
 print(movie)
-# Output: Top Gun. Tomatometer: 58. Audience Score: 83. Genres - ['Action', 'Adventure']. Weighted score: 66.
+# Output
+    # Top Gun, PG.
+    # Tomatometer: 58
+    # Weighted score: 66
+    # Audience Score: 83
+    # Genres - ['Action', 'Adventure']
 # Type: str
 
 print(movie.weighted_score)
