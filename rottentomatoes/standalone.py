@@ -4,7 +4,7 @@
 import requests  # interact with RT website
 
 # Project modules
-from exceptions import *
+from .exceptions import *
 
 
 def _movie_url(movie_name: str) -> str:

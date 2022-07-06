@@ -1,7 +1,7 @@
 """Contains classes that auto fetch all attributes."""
 
-from standalone import audience_score, rating, tomatometer, genres
-from exceptions import *
+from .standalone import audience_score, rating, tomatometer, genres
+from .exceptions import *
 
 
 class Movie:
