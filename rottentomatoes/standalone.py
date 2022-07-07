@@ -147,3 +147,22 @@ def rating(movie_name: str) -> str:
 
     # Split and parse
     return rating_block.split('"')[0]
+
+
+def duration(movie_name: str) -> str:
+    """Returns the duration, ex. 1h 32m."""
+    rt_url = _movie_url(movie_name)
+
+    response = requests.get(rt_url)
+    content = str(response.content)
+
+    # Test movie exists
+    if content.find('"ratingValue":"')== -1:
+        raise LookupError(
+            "Unable to find that movie on Rotten Tomatoes.", 
+            f"Try this link to source the movie manually: {rt_url}"
+        )
+    location_key = content.find('"rating":"')
+    rating_block_end = location_key - 2
+    return_duration = content[rating_block_end-10:rating_block_end].split(',')[-1]
+    return return_duration.replace(' ', '', 1)

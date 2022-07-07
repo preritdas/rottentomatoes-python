@@ -1,6 +1,6 @@
 """Contains classes that auto fetch all attributes."""
 
-from .standalone import audience_score, rating, tomatometer, genres
+from .standalone import audience_score, duration, rating, tomatometer, genres
 from .exceptions import *
 
 
@@ -15,13 +15,10 @@ class Movie:
         self.weighted_score = int((2/3) * self.tomatometer + (1/3) * self.audience_score)
         self.genres = genres(self.movie_title)
         self.rating = rating(self.movie_title)
+        self.duration = duration(self.movie_title)
 
     def __str__(self):
-        return f"{self.movie_title.title()}, {self.rating}.\n" \
+        return f"{self.movie_title.title()}, {self.rating}, {self.duration}.\n" \
             f"Tomatometer: {self.tomatometer}\n" \
             f"Weighted score: {self.weighted_score}\n" \
             f"Audience Score: {self.audience_score}\nGenres - {self.genres}\n"
-
-
-if __name__ == '__main__':
-    print(Movie('top gun'))
