@@ -33,11 +33,16 @@ print(rt.weighted_score('happy gilmore'))
 # Output: 69
 # Type: int
 
+print(rt.year_released('happy gilmore'))
+# Output: 1996
+# Type: str
+
 # --- Using the Movie class ---
 movie = rt.Movie('top gun')
 print(movie)
 # Output
-    # Top Gun, PG.
+    # Top Gun, PG, 1h 49m.
+    # Released in 1986.
     # Tomatometer: 58
     # Weighted score: 66
     # Audience Score: 83
