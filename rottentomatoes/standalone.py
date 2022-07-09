@@ -166,3 +166,21 @@ def duration(movie_name: str) -> str:
     rating_block_end = location_key - 2
     return_duration = content[rating_block_end-10:rating_block_end].split(',')[-1]
     return return_duration.replace(' ', '', 1)
+
+
+def year_released(movie_name: str) -> str:
+    """Returns a string of the year the movie was released."""
+    rt_url = _movie_url(movie_name)
+
+    response = requests.get(rt_url)
+    content = str(response.content)
+
+    # Test movie exists
+    if content.find('"ratingValue":"')== -1:
+        raise LookupError(
+            "Unable to find that movie on Rotten Tomatoes.", 
+            f"Try this link to source the movie manually: {rt_url}"
+        )
+    location_key = content.find('"cag[release]":"')
+    start = location_key+len('"cag[release]":"')
+    return content[start:start+4]
