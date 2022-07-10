@@ -37,6 +37,10 @@ print(rt.year_released('happy gilmore'))
 # Output: 1996
 # Type: str
 
+print(rt.actors('top gun maverick', max_actors=5))
+# Output: ['Tom Cruise', 'Miles Teller', 'Jennifer Connelly', 'Jon Hamm', 'Glen Powell']
+# Type: list[str]
+
 # --- Using the Movie class ---
 movie = rt.Movie('top gun')
 print(movie)
@@ -47,6 +51,7 @@ print(movie)
     # Weighted score: 66
     # Audience Score: 83
     # Genres - ['Action', 'Adventure']
+    # Prominent actors: Tom Cruise, Kelly McGillis, Anthony Edwards, Val Kilmer, Tom Skerritt.
 # Type: str
 
 print(movie.weighted_score)
