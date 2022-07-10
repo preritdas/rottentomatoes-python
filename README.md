@@ -11,7 +11,7 @@ The weighted score is calculated using the formula $\frac{2}{3}(tomatometer) + \
 Basic usage examples:
 
 ```python
-import rottentomatoes_python as rt
+import rottentomatoes as rt
 
 print(rt.tomatometer("happy gilmore"))
 # Output: 61
@@ -70,7 +70,7 @@ When _any_ call is made to scrape the Rotten Tomatoes website (Tomatometer, Audi
 
 ## Performance
 
-`v0.3.0` makes 19x more efficient that the previous release, `v0.2.5`. Data attained from scraping Rotten Tomatoes is temporarily cached and used to parse various other attributes. To test the performance difference, I used two separate virtual environments, `old` and `venv`. `rottentomatoes-python==0.2.5` was installed on `old`, and `rottentomatoes-python==0.3.0` was installed on `venv`. I then ran the same script, shown below, using each environment (Python 3.10.4). 
+`v0.3.0` makes the `Movie` class 19x more efficient. Data attained from scraping Rotten Tomatoes is temporarily cached and used to parse various other attributes. To test the performance difference, I used two separate virtual environments, `old` and `venv`. `rottentomatoes-python==0.2.5` was installed on `old`, and `rottentomatoes-python==0.3.0` was installed on `venv`. I then ran the same script, shown below, using each environment (Python 3.10.4). 
 
 ```python
 import rottentomatoes as rt
