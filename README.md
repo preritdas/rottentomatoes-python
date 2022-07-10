@@ -61,3 +61,50 @@ If you're using this package within a larger program, it's useful to know what e
 ### `LookupError`
 
 When _any_ call is made to scrape the Rotten Tomatoes website (Tomatometer, Audience Score, Genres, etc.), if a proper movie page wasn't returned (can be due to a typo in name entry, duplicate movie names, etc.), a `LookupError` is raised, printing the attempted query url.
+
+
+## Performance
+
+`v0.3.0` makes 19x more efficient that the previous release, `v0.2.5`. Data attained from scraping Rotten Tomatoes is temporarily cached and used to parse various other attributes. To test the performance difference, I used two separate virtual environments, `old` and `venv`. `rottentomatoes-python==0.2.5` was installed on `old`, and `rottentomatoes-python==0.3.0` was installed on `venv`. I then ran the same script, shown below, using each environment (Python 3.10.4). 
+
+```python
+import rottentomatoes as rt
+from time import perf_counter
+
+
+def test() -> None:
+    start = perf_counter()
+    movie = rt.Movie('top gun maverick')
+    print('\n', movie, sep='')
+    print(f"That took {perf_counter() - start} seconds.")
+
+
+if __name__ == "__main__":
+    test()
+```
+
+The results:
+
+```console
+❯ deactivate && source old/bin/activate && python test.py
+
+Top Gun Maverick, PG-13, 2h 11m.
+Released in 2022.
+Tomatometer: 97
+Weighted score: 97
+Audience Score: 99
+Genres - ['Action', 'Adventure']
+
+That took 6.506246249999094 seconds.
+❯ deactivate && source venv/bin/activate && python test.py
+
+Top Gun Maverick, PG-13, 2h 11m.
+Released in 2022.
+Tomatometer: 97
+Weighted score: 97
+Audience Score: 99
+Genres - ['Action', 'Adventure']
+Prominent actors: Tom Cruise, Miles Teller, Jennifer Connelly, Jon Hamm, Glen Powell.
+
+That took 0.3400420409961953 seconds.
+```
