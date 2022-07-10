@@ -23,7 +23,15 @@ def _movie_url(movie_name: str) -> str:
     return 'https://www.rottentomatoes.com/m/' + underscored
 
 
-def tomatometer(movie_name: str) -> int:
+def _request(movie_name: str) -> str:
+    """Scrapes Rotten Tomatoes for the raw website data, to be
+    passed to each standalone function for parsing."""
+    rt_url = _movie_url(movie_name)
+    response = requests.get(rt_url)
+    return str(response.content)
+
+
+def tomatometer(movie_name: str, content: str = None) -> int:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. 
 
@@ -38,10 +46,11 @@ def tomatometer(movie_name: str) -> int:
     Returns:
         int: Tomatometer of `movie_name`.
     """
-    rt_url = _movie_url(movie_name)
-
-    response = requests.get(rt_url)
-    content = str(response.content)
+    if content is None:
+        rt_url = _movie_url(movie_name)
+        response = requests.get(rt_url)
+        content = str(response.content)
+    
     location_key = content.find('"ratingValue":"')
     if location_key == -1:
         raise LookupError(
@@ -57,7 +66,7 @@ def tomatometer(movie_name: str) -> int:
     return int(rating[0])
 
 
-def audience_score(movie_name: str) -> int:
+def audience_score(movie_name: str, content: str = None) -> int:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. 
 
@@ -72,10 +81,10 @@ def audience_score(movie_name: str) -> int:
     Returns:
         int: Tomatometer of `movie_name`.
     """
-    rt_url = _movie_url(movie_name)
-
-    response = requests.get(rt_url)
-    content = str(response.content)
+    if content is None:
+        rt_url = _movie_url(movie_name)
+        response = requests.get(rt_url)
+        content = str(response.content)
 
     # Test movie exists
     if content.find('"ratingValue":"')== -1:
@@ -92,7 +101,7 @@ def audience_score(movie_name: str) -> int:
     return int(rating[0])
 
 
-def genres(movie_name: str) -> list[str]:
+def genres(movie_name: str, content: str = None) -> list[str]:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. Copies the movie url to clipboard.
 
@@ -107,10 +116,11 @@ def genres(movie_name: str) -> list[str]:
     Returns:
         list[str]: List of genres.
     """
-    rt_url = _movie_url(movie_name)
+    if content is None:
+        rt_url = _movie_url(movie_name)
+        response = requests.get(rt_url)
+        content = str(response.content)
 
-    response = requests.get(rt_url)
-    content = str(response.content)
     location_key = content.find('"genre":') 
     if location_key == -1:
         raise LookupError(
@@ -123,17 +133,23 @@ def genres(movie_name: str) -> list[str]:
     return list(map(lambda x: x.replace('"', ''), genres))  # remove quotes from items    
 
 
-def weighted_score(movie_name: str) -> int:
+def weighted_score(movie_name: str, content: str = None) -> int:
     """2/3 tomatometer, 1/3 audience score."""
-    return int((2/3) * tomatometer(movie_name) + (1/3) * audience_score(movie_name))
+    if content is None:
+        rt_url = _movie_url(movie_name)
+        response = requests.get(rt_url)
+        content = str(response.content)
+
+    return int((2/3) * tomatometer(movie_name, content=content) + \
+        (1/3) * audience_score(movie_name, content=content))
 
 
-def rating(movie_name: str) -> str:
+def rating(movie_name: str, content: str = None) -> str:
     """Returns a `str` of PG, PG-13, R, etc."""
-    rt_url = _movie_url(movie_name)
-
-    response = requests.get(rt_url)
-    content = str(response.content)
+    if content is None:
+        rt_url = _movie_url(movie_name)
+        response = requests.get(rt_url)
+        content = str(response.content)
 
     # Test movie exists
     if content.find('"ratingValue":"')== -1:
@@ -149,12 +165,12 @@ def rating(movie_name: str) -> str:
     return rating_block.split('"')[0]
 
 
-def duration(movie_name: str) -> str:
+def duration(movie_name: str, content: str = None) -> str:
     """Returns the duration, ex. 1h 32m."""
-    rt_url = _movie_url(movie_name)
-
-    response = requests.get(rt_url)
-    content = str(response.content)
+    if content is None:
+        rt_url = _movie_url(movie_name)
+        response = requests.get(rt_url)
+        content = str(response.content)
 
     # Test movie exists
     if content.find('"ratingValue":"')== -1:
@@ -168,12 +184,12 @@ def duration(movie_name: str) -> str:
     return return_duration.replace(' ', '', 1)
 
 
-def year_released(movie_name: str) -> str:
+def year_released(movie_name: str, content: str = None) -> str:
     """Returns a string of the year the movie was released."""
-    rt_url = _movie_url(movie_name)
-
-    response = requests.get(rt_url)
-    content = str(response.content)
+    if content is None:
+        rt_url = _movie_url(movie_name)
+        response = requests.get(rt_url)
+        content = str(response.content)
 
     # Test movie exists
     if content.find('"ratingValue":"')== -1:
@@ -184,3 +200,35 @@ def year_released(movie_name: str) -> str:
     location_key = content.find('"cag[release]":"')
     start = location_key+len('"cag[release]":"')
     return content[start:start+4]
+
+
+def actors(movie_name: str, max_actors: int = 100, content: str = None) -> list[str]:
+    """Returns a list of all the actors listed
+    by Rotten Tomatoes. Specify `max_actors` to only receive
+    a certain number of the most prominent actors in the film."""
+    if content is None:
+        rt_url = _movie_url(movie_name)
+        response = requests.get(rt_url)
+        content = str(response.content)
+
+    # Test movie exists
+    if content.find('"ratingValue":"')== -1:
+        raise LookupError(
+            "Unable to find that movie on Rotten Tomatoes.", 
+            f"Try this link to source the movie manually: {rt_url}"
+        )
+    
+    # Find all instances
+    actors = []
+    while True:
+        location_key = content.find('<span class="characters subtle smaller" title="')
+        # Check if there are more
+        if location_key == -1:
+            break
+        actor_start = location_key + \
+            len('<span class="characters subtle smaller" title="') 
+        actor = content[actor_start:actor_start+50].split('"')[0]
+        actors.append(actor)
+        content = content[actor_start:]  # remove this actor, on to the next
+
+    return actors[:max_actors]
