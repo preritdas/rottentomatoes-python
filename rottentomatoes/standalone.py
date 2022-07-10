@@ -55,7 +55,7 @@ def tomatometer(movie_name: str, content: str = None) -> int:
     if location_key == -1:
         raise LookupError(
             "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {rt_url}"
+            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
         )
     rating_block_location = location_key + len('"ratingValue":"') - 1
     rating_block = content[rating_block_location:rating_block_location+5]
@@ -90,7 +90,7 @@ def audience_score(movie_name: str, content: str = None) -> int:
     if content.find('"ratingValue":"')== -1:
         raise LookupError(
             "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {rt_url}"
+            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
         )
     location_key = content.find('"audienceScore":')
     rating_block_location = location_key + len('"audienceScore":')
@@ -125,7 +125,7 @@ def genres(movie_name: str, content: str = None) -> list[str]:
     if location_key == -1:
         raise LookupError(
             "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {rt_url}"
+            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
         )
     rating_block_location = location_key + len('"genre":')
     rating_block = content[rating_block_location:rating_block_location+50]
@@ -155,7 +155,7 @@ def rating(movie_name: str, content: str = None) -> str:
     if content.find('"ratingValue":"')== -1:
         raise LookupError(
             "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {rt_url}"
+            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
         )
     location_key = content.find('"contentRating":"')
     rating_block_location = location_key + len('"audienceScore":"')
@@ -176,7 +176,7 @@ def duration(movie_name: str, content: str = None) -> str:
     if content.find('"ratingValue":"')== -1:
         raise LookupError(
             "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {rt_url}"
+            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
         )
     location_key = content.find('"rating":"')
     rating_block_end = location_key - 2
@@ -195,7 +195,7 @@ def year_released(movie_name: str, content: str = None) -> str:
     if content.find('"ratingValue":"')== -1:
         raise LookupError(
             "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {rt_url}"
+            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
         )
     location_key = content.find('"cag[release]":"')
     start = location_key+len('"cag[release]":"')
@@ -215,7 +215,7 @@ def actors(movie_name: str, max_actors: int = 100, content: str = None) -> list[
     if content.find('"ratingValue":"')== -1:
         raise LookupError(
             "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {rt_url}"
+            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
         )
     
     # Find all instances
