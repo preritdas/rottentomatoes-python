@@ -2,6 +2,7 @@
 
 # Non-local imports
 import requests  # interact with RT website
+from typing import List
 
 # Project modules
 from .exceptions import *
@@ -101,7 +102,7 @@ def audience_score(movie_name: str, content: str = None) -> int:
     return int(rating[0])
 
 
-def genres(movie_name: str, content: str = None) -> list[str]:
+def genres(movie_name: str, content: str = None) -> List[str]:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. Copies the movie url to clipboard.
 
@@ -202,7 +203,7 @@ def year_released(movie_name: str, content: str = None) -> str:
     return content[start:start+4]
 
 
-def actors(movie_name: str, max_actors: int = 100, content: str = None) -> list[str]:
+def actors(movie_name: str, max_actors: int = 100, content: str = None) -> List[str]:
     """Returns a list of all the actors listed
     by Rotten Tomatoes. Specify `max_actors` to only receive
     a certain number of the most prominent actors in the film."""
