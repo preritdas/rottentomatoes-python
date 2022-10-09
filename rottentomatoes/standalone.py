@@ -146,7 +146,7 @@ def rating(movie_name: str, content: str = None) -> str:
         content = _request(movie_name)
     
     location_key = content.find('"contentRating":"')
-    rating_block_location = location_key + len('"audienceScore":"')
+    rating_block_location = location_key + len('"contentRating":"')
     rating_block = content[rating_block_location:rating_block_location+5]
 
     # Split and parse
