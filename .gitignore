@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+sampleresponse.txt
+.DS_Store
+
+# Dist files
+removedists
+build/
+rottentomatoes_python.egg-info
