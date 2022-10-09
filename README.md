@@ -1,4 +1,5 @@
 ![tests](https://github.com/preritdas/rottentomatoes-python/actions/workflows/pytest.yml/badge.svg)
+![pypi](https://github.com/preritdas/rottentomatoes-python/actions/workflows/python-publish.yml/badge.svg)
 
 
 # Rotten Tomatoes in Python
