@@ -8,7 +8,7 @@ class Movie:
     Raises `exceptions.LookupError` if the movie is not found on Rotten Tomatoes.
     """
     def __init__(self, movie_title: str):
-        self.movie_title = movie_title
+        self.movie_title = movie_title.title()
         content = standalone._request(movie_title)
 
         self.tomatometer = standalone.tomatometer(self.movie_title, content=content)
