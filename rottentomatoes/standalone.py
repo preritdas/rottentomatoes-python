@@ -26,10 +26,29 @@ def _movie_url(movie_name: str) -> str:
 
 def _request(movie_name: str) -> str:
     """Scrapes Rotten Tomatoes for the raw website data, to be
-    passed to each standalone function for parsing."""
+    passed to each standalone function for parsing.
+    
+    Args:
+        movie_name (str): Title of the movie. Case insensitive.
+
+    Raises:
+        LookupError: If the movie isn't found on Rotten Tomatoes.
+        This could be due to a typo in entering the movie's name,
+        duplicates, or other issues.
+
+    Returns:
+        str: The raw RT website data of the given movie.
+    """
     rt_url = _movie_url(movie_name)
     response = requests.get(rt_url)
-    return str(response.content)
+
+    if response.status_code == 404:
+        raise LookupError(
+            "Unable to find that movie on Rotten Tomatoes.", 
+            f"Try this link to source the movie manually: {rt_url}"
+        )
+
+    return response.text
 
 
 def tomatometer(movie_name: str, content: str = None) -> int:
@@ -48,16 +67,9 @@ def tomatometer(movie_name: str, content: str = None) -> int:
         int: Tomatometer of `movie_name`.
     """
     if content is None:
-        rt_url = _movie_url(movie_name)
-        response = requests.get(rt_url)
-        content = str(response.content)
+        content = _request(movie_name)
     
     location_key = content.find('"ratingValue":"')
-    if location_key == -1:
-        raise LookupError(
-            "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
-        )
     rating_block_location = location_key + len('"ratingValue":"') - 1
     rating_block = content[rating_block_location:rating_block_location+5]
 
@@ -83,16 +95,8 @@ def audience_score(movie_name: str, content: str = None) -> int:
         int: Tomatometer of `movie_name`.
     """
     if content is None:
-        rt_url = _movie_url(movie_name)
-        response = requests.get(rt_url)
-        content = str(response.content)
+        content = _request(movie_name)
 
-    # Test movie exists
-    if content.find('"ratingValue":"')== -1:
-        raise LookupError(
-            "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
-        )
     location_key = content.find('"audienceScore":')
     rating_block_location = location_key + len('"audienceScore":')
     rating_block = content[rating_block_location:rating_block_location+5]
@@ -118,16 +122,9 @@ def genres(movie_name: str, content: str = None) -> List[str]:
         list[str]: List of genres.
     """
     if content is None:
-        rt_url = _movie_url(movie_name)
-        response = requests.get(rt_url)
-        content = str(response.content)
+        content = _request(movie_name)
 
-    location_key = content.find('"genre":') 
-    if location_key == -1:
-        raise LookupError(
-            "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
-        )
+    location_key = content.find('"genre":')
     rating_block_location = location_key + len('"genre":')
     rating_block = content[rating_block_location:rating_block_location+50]
     genres = rating_block[1:].split(']')[0].split(',')  # list of genres
@@ -137,9 +134,7 @@ def genres(movie_name: str, content: str = None) -> List[str]:
 def weighted_score(movie_name: str, content: str = None) -> int:
     """2/3 tomatometer, 1/3 audience score."""
     if content is None:
-        rt_url = _movie_url(movie_name)
-        response = requests.get(rt_url)
-        content = str(response.content)
+        content = _request(movie_name)
 
     return int((2/3) * tomatometer(movie_name, content=content) + \
         (1/3) * audience_score(movie_name, content=content))
@@ -148,16 +143,8 @@ def weighted_score(movie_name: str, content: str = None) -> int:
 def rating(movie_name: str, content: str = None) -> str:
     """Returns a `str` of PG, PG-13, R, etc."""
     if content is None:
-        rt_url = _movie_url(movie_name)
-        response = requests.get(rt_url)
-        content = str(response.content)
-
-    # Test movie exists
-    if content.find('"ratingValue":"')== -1:
-        raise LookupError(
-            "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
-        )
+        content = _request(movie_name)
+    
     location_key = content.find('"contentRating":"')
     rating_block_location = location_key + len('"audienceScore":"')
     rating_block = content[rating_block_location:rating_block_location+5]
@@ -169,16 +156,8 @@ def rating(movie_name: str, content: str = None) -> str:
 def duration(movie_name: str, content: str = None) -> str:
     """Returns the duration, ex. 1h 32m."""
     if content is None:
-        rt_url = _movie_url(movie_name)
-        response = requests.get(rt_url)
-        content = str(response.content)
+        content = _request(movie_name)
 
-    # Test movie exists
-    if content.find('"ratingValue":"')== -1:
-        raise LookupError(
-            "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
-        )
     location_key = content.find('"rating":"')
     rating_block_end = location_key - 2
     return_duration = content[rating_block_end-10:rating_block_end].split(',')[-1]
@@ -188,16 +167,8 @@ def duration(movie_name: str, content: str = None) -> str:
 def year_released(movie_name: str, content: str = None) -> str:
     """Returns a string of the year the movie was released."""
     if content is None:
-        rt_url = _movie_url(movie_name)
-        response = requests.get(rt_url)
-        content = str(response.content)
+        content = _request(movie_name)
 
-    # Test movie exists
-    if content.find('"ratingValue":"')== -1:
-        raise LookupError(
-            "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
-        )
     location_key = content.find('"cag[release]":"')
     start = location_key+len('"cag[release]":"')
     return content[start:start+4]
@@ -208,17 +179,8 @@ def actors(movie_name: str, max_actors: int = 100, content: str = None) -> List[
     by Rotten Tomatoes. Specify `max_actors` to only receive
     a certain number of the most prominent actors in the film."""
     if content is None:
-        rt_url = _movie_url(movie_name)
-        response = requests.get(rt_url)
-        content = str(response.content)
+        content = _request(movie_name)
 
-    # Test movie exists
-    if content.find('"ratingValue":"')== -1:
-        raise LookupError(
-            "Unable to find that movie on Rotten Tomatoes.", 
-            f"Try this link to source the movie manually: {_movie_url(movie_name)}"
-        )
-    
     # Find all instances
     actors = []
     while True:
