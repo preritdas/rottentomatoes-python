@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
 
-VERSION = "0.3.2"
+VERSION = "0.3.3"
 DESCRIPTION = (
-    "Scrape Rotten Tomatoes's website for basic information on movies, without the " \
-        "use of their hard-to-attain official REST API."
+    "Scrape Rotten Tomatoes's website for basic information on movies, without the "
+    "use of their hard-to-attain official REST API."
 )
 
 

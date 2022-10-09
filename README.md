@@ -1,3 +1,7 @@
+![tests](https://github.com/preritdas/rottentomatoes-python/actions/workflows/pytest.yml/badge.svg)
+![pypi](https://github.com/preritdas/rottentomatoes-python/actions/workflows/python-publish.yml/badge.svg)
+
+
 # Rotten Tomatoes in Python
 
 This package allows you to easily fetch Rotten Tomatoes scores and other movie data such as genres, without the use of the official Rotten Tomatoes API. The package scrapes their website for the data. I built this because unfortunately, to get access to their API, you have to submit a special request which takes an inordinate amount of time to process, or doesn't go through at all. 
