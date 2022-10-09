@@ -1,12 +1,11 @@
 """Contains classes that auto fetch all attributes."""
 
 from . import standalone
-from .exceptions import *
 
 
 class Movie:
     """Accepts the name of a movie and automatically fetches all attributes.
-    Raises an error if the movie is not found on Rotten Tomatoes.
+    Raises `exceptions.LookupError` if the movie is not found on Rotten Tomatoes.
     """
     def __init__(self, movie_title: str):
         self.movie_title = movie_title
@@ -27,4 +26,7 @@ class Movie:
             f"Tomatometer: {self.tomatometer}\n" \
             f"Weighted score: {self.weighted_score}\n" \
             f"Audience Score: {self.audience_score}\nGenres - {self.genres}\n" \
-            f"Prominent actors: {', '.join(self.actors)}.\n"
+            f"Prominent actors: {', '.join(self.actors)}."
+
+    def __eq__(self, other):
+        return self.movie_title == other.movie_title
