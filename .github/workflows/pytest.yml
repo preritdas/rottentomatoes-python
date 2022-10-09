@@ -17,6 +17,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail_fast: false
+      matrix:
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+        python: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
