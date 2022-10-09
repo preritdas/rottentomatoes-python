@@ -23,3 +23,20 @@ def test_weighted_score():
 
 def test_rating():
     assert standalone.rating("top gun maverick") == "PG-13"
+
+
+def test_duration():
+    assert standalone.duration("top gun") == "1h 49m"
+
+
+def test_year_released():
+    assert standalone.year_released("forrest gump") == "1994"
+
+
+def test_actors():
+    res = standalone.actors("forrest gump", 5)
+    
+    for actor in [
+        'Tom Hanks', 'Robin Wright', 'Gary Sinise', 'Mykelti Williamson', 'Sally Field'
+    ]:
+        assert actor in res
