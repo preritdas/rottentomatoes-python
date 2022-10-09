@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - setup.py
+  workflow_dispatch:
 
 
 jobs:
