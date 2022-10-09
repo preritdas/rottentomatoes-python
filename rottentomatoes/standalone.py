@@ -1,6 +1,7 @@
 """Standalone functions to fetch attributes about a movie."""
 
 # Non-local imports
+import json
 import requests  # interact with RT website
 from typing import List
 
@@ -24,10 +25,70 @@ def _movie_url(movie_name: str) -> str:
     return 'https://www.rottentomatoes.com/m/' + underscored
 
 
+def _extract(content: str, start_string: str, end_string: str) -> str:
+    """Retrieves parts of the RT website data given a start string
+    and an end string.
+
+    Args:
+        content (str): The raw RT data for a movie.
+        start_string (str): The start of the data to be extracted.
+        end_string (str): The end of the data to be extracted.
+
+    Returns:
+        string: A part of the raw RT data, from the start string to the
+                end string.
+    """
+    start_idx = content.find(start_string)
+
+    if start_idx == -1:
+        return None
+
+    end_idx = content.find(end_string, start_idx)
+    return content[start_idx+len(start_string):end_idx]
+
+
+def _get_schema_json_ld(content: str) -> object:
+    """Retrieves the schema.org data model for a movie. This data
+    typically contains Tomatometer score, genre etc.
+
+    Args:
+        content (str): The raw RT data for a movie.
+
+    Returns:
+        object: The schema.org data model for the movie.
+    """
+    return json.loads(
+        _extract(
+            content,
+            '<script type="application/ld+json">',
+            '</script>'
+        )
+    )
+
+
+def _get_score_details(content: str) -> object:
+    """Retrieves the scoreboard data for a movie. Scoreboard data
+    typically contains audience score, ratings, duration etc.
+
+    Args:
+        movie_name (str): Title of the movie. Case insensitive.
+
+    Returns:
+        object: The scoreboard data for the movie.
+    """
+    return json.loads(
+        _extract(
+            content,
+            '<script id="score-details-json" type="application/json">',
+            '</script>'
+        )
+    )
+
+
 def _request(movie_name: str) -> str:
     """Scrapes Rotten Tomatoes for the raw website data, to be
     passed to each standalone function for parsing.
-    
+
     Args:
         movie_name (str): Title of the movie. Case insensitive.
 
@@ -44,7 +105,7 @@ def _request(movie_name: str) -> str:
 
     if response.status_code == 404:
         raise LookupError(
-            "Unable to find that movie on Rotten Tomatoes.", 
+            "Unable to find that movie on Rotten Tomatoes.",
             f"Try this link to source the movie manually: {rt_url}"
         )
 
@@ -68,15 +129,8 @@ def tomatometer(movie_name: str, content: str = None) -> int:
     """
     if content is None:
         content = _request(movie_name)
-    
-    location_key = content.find('"ratingValue":"')
-    rating_block_location = location_key + len('"ratingValue":"') - 1
-    rating_block = content[rating_block_location:rating_block_location+5]
 
-    # Split and parse
-    no_first_quote = rating_block[1:]
-    rating = no_first_quote.split('"')
-    return int(rating[0])
+    return _get_score_details(content)['scoreboard']['tomatometerScore']
 
 
 def audience_score(movie_name: str, content: str = None) -> int:
@@ -97,13 +151,7 @@ def audience_score(movie_name: str, content: str = None) -> int:
     if content is None:
         content = _request(movie_name)
 
-    location_key = content.find('"audienceScore":')
-    rating_block_location = location_key + len('"audienceScore":')
-    rating_block = content[rating_block_location:rating_block_location+5]
-
-    # Split and parse
-    rating = rating_block.split(',')
-    return int(rating[0])
+    return _get_score_details(content)['scoreboard']['audienceScore']
 
 
 def genres(movie_name: str, content: str = None) -> List[str]:
@@ -124,11 +172,7 @@ def genres(movie_name: str, content: str = None) -> List[str]:
     if content is None:
         content = _request(movie_name)
 
-    location_key = content.find('"genre":')
-    rating_block_location = location_key + len('"genre":')
-    rating_block = content[rating_block_location:rating_block_location+50]
-    genres = rating_block[1:].split(']')[0].split(',')  # list of genres
-    return list(map(lambda x: x.replace('"', ''), genres))  # remove quotes from items    
+    return _get_schema_json_ld(content)['genre']
 
 
 def weighted_score(movie_name: str, content: str = None) -> int:
@@ -136,21 +180,16 @@ def weighted_score(movie_name: str, content: str = None) -> int:
     if content is None:
         content = _request(movie_name)
 
-    return int((2/3) * tomatometer(movie_name, content=content) + \
-        (1/3) * audience_score(movie_name, content=content))
+    return int((2/3) * tomatometer(movie_name, content=content) +
+               (1/3) * audience_score(movie_name, content=content))
 
 
 def rating(movie_name: str, content: str = None) -> str:
     """Returns a `str` of PG, PG-13, R, etc."""
     if content is None:
         content = _request(movie_name)
-    
-    location_key = content.find('"contentRating":"')
-    rating_block_location = location_key + len('"contentRating":"')
-    rating_block = content[rating_block_location:rating_block_location+5]
 
-    # Split and parse
-    return rating_block.split('"')[0]
+    return _get_score_details(content)['scoreboard']['rating']
 
 
 def duration(movie_name: str, content: str = None) -> str:
@@ -158,9 +197,8 @@ def duration(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
 
-    location_key = content.find('"rating":"')
-    rating_block_end = location_key - 2
-    return_duration = content[rating_block_end-10:rating_block_end].split(',')[-1]
+    return_duration = _get_score_details(
+        content)['scoreboard']['info'].split(',')[-1]
     return return_duration.replace(' ', '', 1)
 
 
@@ -169,9 +207,9 @@ def year_released(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
 
-    location_key = content.find('"cag[release]":"')
-    start = location_key+len('"cag[release]":"')
-    return content[start:start+4]
+    release_year = _get_score_details(
+        content)['scoreboard']['info'].split(',')[0]
+    return release_year
 
 
 def actors(movie_name: str, max_actors: int = 100, content: str = None) -> List[str]:
@@ -183,15 +221,14 @@ def actors(movie_name: str, max_actors: int = 100, content: str = None) -> List[
 
     # Find all instances
     actors = []
-    while True:
-        location_key = content.find('<span class="characters subtle smaller" title="')
-        # Check if there are more
-        if location_key == -1:
+    start_string = '<span class="characters subtle smaller" title="'
+    while len(actors) < max_actors:
+        actor = _extract(content, start_string, '">')
+        # If no other actors can be extracted
+        if actor is None:
             break
-        actor_start = location_key + \
-            len('<span class="characters subtle smaller" title="') 
-        actor = content[actor_start:actor_start+50].split('"')[0]
         actors.append(actor)
-        content = content[actor_start:]  # remove this actor, on to the next
+        # Continue traversing content for more actors
+        content = content[content.find(start_string)+len(start_string):]
 
     return actors[:max_actors]
