@@ -3,6 +3,12 @@ name: tests
 
 on:
   push:
+    paths-ignore:
+      - README.md
+      - setup.py
+      - .gitignore
+      - Sample Web Response.txt
+      - .github/workflows/python-publish.yml
   pull_request:
   workflow_dispatch:
 
