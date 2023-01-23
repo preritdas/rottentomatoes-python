@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 
-VERSION = "0.4.0"
+VERSION = "0.4.1"
 DESCRIPTION = (
     "Scrape Rotten Tomatoes's website for basic information on movies, without the "
     "use of their hard-to-attain official REST API."
@@ -23,7 +23,7 @@ setup(
     long_description=read_me(),
     long_description_content_type="text/markdown",
     packages=find_packages(),
-    install_requires = ["requests"],
+    install_requires=["requests"],
     keywords=["python", "movies", "rottentomatoes"],
     classifiers=[
         "Programming Language :: Python :: 3",
