@@ -232,3 +232,15 @@ def actors(movie_name: str, max_actors: int = 100, content: str = None) -> List[
         content = content[content.find(start_string)+len(start_string):]
 
     return actors[:max_actors]
+
+def directors(movie_name: str, max_directors: int = 10, content: str = None) -> List[str]:
+    """Returns a list of all the directors listed
+    by Rotten Tomatoes. Specify `max_directors` to only receive
+    a certain number."""
+    get_name = lambda x: x.split("/")[-1].replace("_", " ").title()
+    if content is None:
+        content = _request(movie_name)
+
+    directors = _get_schema_json_ld(content)["director"][:max_directors]
+
+    return [get_name(n["sameAs"]) for n in directors]

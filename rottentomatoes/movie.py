@@ -19,10 +19,12 @@ class Movie:
         self.duration = standalone.duration(self.movie_title, content=content)
         self.year_released = standalone.year_released(self.movie_title, content=content)
         self.actors = standalone.actors(self.movie_title, max_actors=5, content=content)
+        self.directors = standalone.directors(self.movie_title, max_directors=5, content=content)
 
     def __str__(self):
         return f"{self.movie_title.title()}, {self.rating}, {self.duration}.\n" \
             f"Released in {self.year_released}.\n" \
+            f"Directed by {', '.join(self.actors)}.\n" \
             f"Tomatometer: {self.tomatometer}\n" \
             f"Weighted score: {self.weighted_score}\n" \
             f"Audience Score: {self.audience_score}\nGenres - {self.genres}\n" \
