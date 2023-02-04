@@ -8,6 +8,10 @@
 
 This package allows you to easily fetch Rotten Tomatoes scores and other movie data such as genres, without the use of the official Rotten Tomatoes API. The package scrapes their website for the data. I built this because unfortunately, to get access to their API, you have to submit a special request which takes an inordinate amount of time to process, or doesn't go through at all. 
 
+> **Note**
+> Coding support requested. If you found value in this package, consider opening a pull request to complete one of the tasks below.
+> [ ] Find the correct Rotten Tomatoes movie link by scraping the search page for the top result for the movie name. See #4. You can open a discussion for further information on this.
+
 ## Usage
 
 You can either call the standalone functions `tomatometer`, `audience_score`, `genres`, etc., or use the `Movie` class to only pass the name and have each attribute be fetched automatically. If you use the `Movie` class, you can print all attributes by printing the object itself, or by accessing each attribute individually. 
