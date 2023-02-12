@@ -7,6 +7,7 @@ from typing import List
 
 # Project modules
 from .exceptions import *
+from . import search
 
 
 def _movie_url(movie_name: str) -> str:
@@ -85,12 +86,13 @@ def _get_score_details(content: str) -> object:
     )
 
 
-def _request(movie_name: str) -> str:
+def _request(movie_name: str, raw_url: bool = False) -> str:
     """Scrapes Rotten Tomatoes for the raw website data, to be
     passed to each standalone function for parsing.
 
     Args:
         movie_name (str): Title of the movie. Case insensitive.
+        raw_url (bool): Don't search for the movie, build the url manually.
 
     Raises:
         LookupError: If the movie isn't found on Rotten Tomatoes.
@@ -100,7 +102,12 @@ def _request(movie_name: str) -> str:
     Returns:
         str: The raw RT website data of the given movie.
     """
-    rt_url = _movie_url(movie_name)
+    if raw_url:
+        rt_url = _movie_url(movie_name)
+    else:
+        search_result = search.top_movie_result(movie_name)
+        rt_url = search_result.url
+    
     response = requests.get(rt_url)
 
     if response.status_code == 404:
