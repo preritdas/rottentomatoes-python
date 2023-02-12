@@ -4,6 +4,8 @@ import requests
 import re
 from typing import List
 
+from .exceptions import LookupError
+
 
 class SearchListing:
     """A search listing from the Rotten Tomatoes search page."""
@@ -64,4 +66,8 @@ def top_movie_result(name: str) -> SearchListing:
     """Get the first movie result that has a tomatometer."""
     results = search_results(name)
     filtered = filter(lambda result: result.is_movie and result.has_tomatometer, results)
+    
+    if not filtered:
+        raise LookupError("No movies found.")
+        
     return list(filtered)[0]
