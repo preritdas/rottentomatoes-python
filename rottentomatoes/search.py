@@ -9,9 +9,10 @@ from .exceptions import LookupError
 
 class SearchListing:
     """A search listing from the Rotten Tomatoes search page."""
-    def __init__(self, has_tomatometer: bool, is_movie: bool, url: str) -> None:
+    def __init__(self, has_tomatometer: bool, is_movie: bool, title: str, url: str) -> None:
         self.has_tomatometer = has_tomatometer
         self.is_movie = is_movie
+        self.title = title
         self.url = str(url)
         
     @classmethod
@@ -36,12 +37,15 @@ class SearchListing:
         
         # Determine if it's a movie
         is_movie = "/m/" in url
+
+        # Determine the title
+        title = "Movie Title"  # for now
         
-        return cls(has_tomatometer=has_tomatometer, is_movie=is_movie, url=url)
+        return cls(has_tomatometer=has_tomatometer, is_movie=is_movie, title=title, url=url)
     
     def __str__(self) -> str:
         """Represent the SearchListing object."""
-        return f"Tomatometer: {self.has_tomatometer}. URL: {self.url}. Is movie: {self.is_movie}."
+        return f"Title: {self.title}. Tomatometer: {self.has_tomatometer}. URL: {self.url}. Is movie: {self.is_movie}."
 
 
 def _movie_search_content(name: str) -> str:
