@@ -45,7 +45,7 @@ def _movie_search_content(name: str) -> str:
     """Raw HTML content from searching for a movie."""
     url_name = "%20".join(name.split())
     url = f"https://www.rottentomatoes.com/search?search={url_name}"
-    content = requests.get(url).content
+    content = str(requests.get(url).content)
     
     # Remove misc quotes from conversion
     content = content[2:]
