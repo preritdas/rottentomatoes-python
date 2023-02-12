@@ -62,10 +62,15 @@ def search_results(name: str) -> List[SearchListing]:
     return [SearchListing.from_html(snippet) for snippet in snippets]
 
 
+def filter_searches(results: List[SearchListing]) -> List[SearchListing]:
+    """Filters search results for valid movies."""
+    return list(filter(lambda result: result.is_movie and result.has_tomatometer, results))
+
+
 def top_movie_result(name: str) -> SearchListing:
     """Get the first movie result that has a tomatometer."""
     results = search_results(name)
-    filtered = list(filter(lambda result: result.is_movie and result.has_tomatometer, results))
+    filtered = filter_searches(results)
     
     if not filtered:
         raise LookupError("No movies found.")
