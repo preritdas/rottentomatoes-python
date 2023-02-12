@@ -65,9 +65,9 @@ def search_results(name: str) -> List[SearchListing]:
 def top_movie_result(name: str) -> SearchListing:
     """Get the first movie result that has a tomatometer."""
     results = search_results(name)
-    filtered = filter(lambda result: result.is_movie and result.has_tomatometer, results)
+    filtered = list(filter(lambda result: result.is_movie and result.has_tomatometer, results))
     
     if not filtered:
         raise LookupError("No movies found.")
         
-    return list(filtered)[0]
+    return filtered[0]
