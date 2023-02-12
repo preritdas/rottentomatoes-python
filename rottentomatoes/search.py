@@ -2,6 +2,7 @@
 import requests
 
 import re
+from typing import List
 
 
 class SearchListing:
@@ -53,7 +54,7 @@ def _movie_search_content(name: str) -> str:
     return content
 
 
-def search_results(name: str) -> list[SearchListing]:
+def search_results(name: str) -> List[SearchListing]:
     """Get a list of search results."""
     content = _movie_search_content(name)
     snippets = re.findall(r"<search-page-media-row(.*?)</search-page-media-row>", content)
