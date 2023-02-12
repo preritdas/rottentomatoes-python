@@ -10,6 +10,10 @@ def test_movie_url():
     assert standalone._movie_url("top gun") == "https://www.rottentomatoes.com/m/top_gun"
 
 
+def test_movie_title():
+    assert standalone.movie_title("top gun") == "Top Gun: Maverick"
+
+
 def test_audience_score():
     assert standalone.audience_score("happy gilmore") == 85
 
