@@ -41,11 +41,27 @@ app = FastAPI(
 )
 
 
-@app.get("/movie/{movie_name}")
+class Movies(BaseModel):
+    movies: list[MovieAttributes] = Field(..., title="A list of movies with attributes.")
+
+
+@app.get("/movie/{movie_name}", tags=["General"])
 async def movie_attributes(movie_name: str) -> MovieAttributes:
     """Get a movie's attributes."""
+    if "_" in movie_name:
+        movie_name = movie_name.replace("_", " ")
+
     movie = rt.Movie(movie_name)
 
     return {
-        "name": movie.name,
+        "name": movie.movie_title,
+        "tomatometer": movie.tomatometer,
+        "audience_score": movie.audience_score,
+        "weighted_score": movie.weighted_score,
+        "genres": movie.genres,
+        "rating": movie.rating,
+        "duration": movie.duration,
+        "year": movie.year_released,
+        "actors": movie.actors,
+        "directors": movie.directors
     }
