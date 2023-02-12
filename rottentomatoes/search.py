@@ -49,8 +49,7 @@ def _movie_search_content(name: str) -> str:
     content = str(requests.get(url).content)
     
     # Remove misc quotes from conversion
-    content = content[2:]
-    content = content[:-1]
+    content = content[2:-1]
     return content
 
 
