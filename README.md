@@ -11,7 +11,7 @@ This package allows you to easily fetch Rotten Tomatoes scores and other movie d
 > **Note**
 > Coding support requested. If you found value in this package, consider opening a pull request to complete one of the tasks below.
 
-[ ] Find the correct Rotten Tomatoes movie link by scraping the search page for the top result for the movie name. See #4. You can open a discussion for further information on this.
+[ ] Determine the movie title from page scrape contents.
 
 ## Usage
 

@@ -4,13 +4,14 @@ from . import standalone
 
 
 class Movie:
-    """Accepts the name of a movie and automatically fetches all attributes.
+    """
+    Accepts the name of a movie and automatically fetches all attributes.
     Raises `exceptions.LookupError` if the movie is not found on Rotten Tomatoes.
     """
-    def __init__(self, movie_title: str):
-        self.movie_title = movie_title.title()
+    def __init__(self, movie_title: str) -> None:
         content = standalone._request(movie_title)
 
+        self.movie_title = standalone.movie_title(movie_title, content=content)
         self.tomatometer = standalone.tomatometer(self.movie_title, content=content)
         self.audience_score = standalone.audience_score(self.movie_title, content=content)
         self.weighted_score = standalone.weighted_score(self.movie_title, content=content)
@@ -21,7 +22,7 @@ class Movie:
         self.actors = standalone.actors(self.movie_title, max_actors=5, content=content)
         self.directors = standalone.directors(self.movie_title, max_directors=5, content=content)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.movie_title.title()}, {self.rating}, {self.duration}.\n" \
             f"Released in {self.year_released}.\n" \
             f"Directed by {', '.join(self.actors)}.\n" \
@@ -30,5 +31,5 @@ class Movie:
             f"Audience Score: {self.audience_score}\nGenres - {self.genres}\n" \
             f"Prominent actors: {', '.join(self.actors)}."
 
-    def __eq__(self, other):
+    def __eq__(self, other: "Movie") -> bool:
         return self.movie_title == other.movie_title

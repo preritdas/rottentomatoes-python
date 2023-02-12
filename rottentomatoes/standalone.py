@@ -7,6 +7,7 @@ from typing import List
 
 # Project modules
 from .exceptions import *
+from . import search
 
 
 def _movie_url(movie_name: str) -> str:
@@ -85,12 +86,13 @@ def _get_score_details(content: str) -> object:
     )
 
 
-def _request(movie_name: str) -> str:
+def _request(movie_name: str, raw_url: bool = False) -> str:
     """Scrapes Rotten Tomatoes for the raw website data, to be
     passed to each standalone function for parsing.
 
     Args:
         movie_name (str): Title of the movie. Case insensitive.
+        raw_url (bool): Don't search for the movie, build the url manually.
 
     Raises:
         LookupError: If the movie isn't found on Rotten Tomatoes.
@@ -100,7 +102,12 @@ def _request(movie_name: str) -> str:
     Returns:
         str: The raw RT website data of the given movie.
     """
-    rt_url = _movie_url(movie_name)
+    if raw_url:
+        rt_url = _movie_url(movie_name)
+    else:
+        search_result = search.top_movie_result(movie_name)
+        rt_url = search_result.url
+    
     response = requests.get(rt_url)
 
     if response.status_code == 404:
@@ -110,6 +117,18 @@ def _request(movie_name: str) -> str:
         )
 
     return response.text
+
+
+def movie_title(movie_name: str, content: str = None) -> str:
+    """Search for the movie and return the queried title."""
+    if content is None:
+        content = _request(movie_name)
+
+    find_str = "score-panel-movie-title"
+    loc = content.find(find_str) + len(find_str) + 2
+    substring = content[loc:loc+100]  # enough breathing room
+    subs = substring.split("<")
+    return subs[0]
 
 
 def tomatometer(movie_name: str, content: str = None) -> int:
@@ -243,4 +262,4 @@ def directors(movie_name: str, max_directors: int = 10, content: str = None) -> 
 
     directors = _get_schema_json_ld(content)["director"][:max_directors]
 
-    return [get_name(n["sameAs"]) for n in directors]
+    return [get_name(n["sameAs"]).replace("-", " ") for n in directors]
