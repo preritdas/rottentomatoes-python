@@ -64,4 +64,4 @@ def top_movie_result(name: str) -> SearchListing:
     """Get the first movie result that has a tomatometer."""
     results = search_results(name)
     filtered = filter(lambda result: result.is_movie and result.has_tomatometer, results)
-    return list(filtered)
+    return list(filtered)[0]
