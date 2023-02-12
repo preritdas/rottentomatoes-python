@@ -2,10 +2,11 @@ from rottentomatoes import standalone
 
 
 def test_tomatometer():
-    assert standalone.tomatometer("top gun") == 58
+    assert standalone.tomatometer("top gun maverick") == 96
 
 
 def test_movie_url():
+    """The old version, before using search."""
     assert standalone._movie_url("top gun") == "https://www.rottentomatoes.com/m/top_gun"
 
 
@@ -26,7 +27,7 @@ def test_rating():
 
 
 def test_duration():
-    assert standalone.duration("top gun") == "1h 49m"
+    assert standalone.duration("top gun") == "2h 11m"
 
 
 def test_year_released():

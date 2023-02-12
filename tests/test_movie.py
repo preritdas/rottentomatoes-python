@@ -7,7 +7,7 @@ def test_movie():
 
     assert str(m)
     assert m.movie_title == "Top Gun"
-    assert all(actor in m.actors for actor in {"Tom Cruise", "Val Kilmer"})
+    assert all(actor in m.actors for actor in {"Tom Cruise", "Miles Teller"})
     assert all(director in m.directors for director in {"Tony Scott"})
     assert m.duration == "1h 49m"
     assert all(genre in m.genres for genre in {"Action", "Adventure"})
