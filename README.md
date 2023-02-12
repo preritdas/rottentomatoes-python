@@ -8,10 +8,6 @@
 
 This package allows you to easily fetch Rotten Tomatoes scores and other movie data such as genres, without the use of the official Rotten Tomatoes API. The package scrapes their website for the data. I built this because unfortunately, to get access to their API, you have to submit a special request which takes an inordinate amount of time to process, or doesn't go through at all. 
 
-> **Note**
-> Coding support requested. If you found value in this package, consider opening a pull request to complete one of the tasks below.
-
-[ ] Determine the movie title from page scrape contents.
 
 ## Usage
 
