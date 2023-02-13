@@ -86,13 +86,14 @@ def _get_score_details(content: str) -> object:
     )
 
 
-def _request(movie_name: str, raw_url: bool = False) -> str:
+def _request(movie_name: str, raw_url: bool = False, force_url: str = "") -> str:
     """Scrapes Rotten Tomatoes for the raw website data, to be
     passed to each standalone function for parsing.
 
     Args:
         movie_name (str): Title of the movie. Case insensitive.
         raw_url (bool): Don't search for the movie, build the url manually.
+        force_url (str): Use this url to scrape the site. Don't use this.
 
     Raises:
         LookupError: If the movie isn't found on Rotten Tomatoes.
@@ -108,7 +109,7 @@ def _request(movie_name: str, raw_url: bool = False) -> str:
         search_result = search.top_movie_result(movie_name)
         rt_url = search_result.url
     
-    response = requests.get(rt_url)
+    response = requests.get(force_url or rt_url)
 
     if response.status_code == 404:
         raise LookupError(
