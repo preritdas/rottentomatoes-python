@@ -9,7 +9,7 @@ from . import models
 app = FastAPI(
     title = "Rotten Tomatoes Scraper API",
     description = "Unofficial API getting data by scraping the Rotten Tomatoes website.",
-    version = "0.5.11"
+    version = "0.5.12"
 )
 
 
