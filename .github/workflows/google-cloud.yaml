@@ -1,0 +1,33 @@
+name: gcp api deployment
+
+
+on:
+  workflow_run:
+    workflows:
+      - tests
+    types:
+      - completed
+    branches:
+      - master
+    paths-ignore:
+      - README.md
+  workflow_dispatch: 
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
+      - name: Authenticate GCP
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          
+      - name: Deploy to GCP App Engine
+        uses: 'google-github-actions/deploy-appengine@v0'
+        
