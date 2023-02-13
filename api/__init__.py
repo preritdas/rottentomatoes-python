@@ -35,7 +35,7 @@ class MovieAttributes(BaseModel):
 
 
 app = FastAPI(
-    name = "Rotten Tomatoes Scraper API",
+    title = "Rotten Tomatoes Scraper API",
     description = "Unofficial API getting data by scraping the Rotten Tomatoes website.",
     version = "0.5.11"
 )
