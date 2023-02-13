@@ -1,0 +1,11 @@
+# For GCP App Engine
+
+runtime: python311
+
+entrypoint: gunicorn -k uvicorn.workers.UvicornWorker api:app
+
+# Latency - resident instance
+instance_class: F1
+
+# automatic_scaling:
+#   min_idle_instances: 0
