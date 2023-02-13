@@ -103,13 +103,13 @@ def _request(movie_name: str, raw_url: bool = False, force_url: str = "") -> str
     Returns:
         str: The raw RT website data of the given movie.
     """
-    if raw_url:
-        rt_url = _movie_url(movie_name)
+    if raw_url or force_url:
+        rt_url = _movie_url(movie_name) if movie_name else force_url
     else:
         search_result = search.top_movie_result(movie_name)
         rt_url = search_result.url
     
-    response = requests.get(force_url or rt_url)
+    response = requests.get(rt_url)
 
     if response.status_code == 404:
         raise LookupError(
