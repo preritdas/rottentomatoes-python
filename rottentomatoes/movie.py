@@ -8,8 +8,14 @@ class Movie:
     Accepts the name of a movie and automatically fetches all attributes.
     Raises `exceptions.LookupError` if the movie is not found on Rotten Tomatoes.
     """
-    def __init__(self, movie_title: str) -> None:
-        content = standalone._request(movie_title)
+    def __init__(self, movie_title: str = "", force_url: str = "") -> None:
+        if not movie_title and not force_url:
+            raise ValueError("You must provide either a movie_title or force_url.")
+
+        if force_url:
+            content = standalone._request(movie_name="", force_url=force_url)
+        else:
+            content = standalone._request(movie_name=movie_title)
 
         self.movie_title = standalone.movie_title(movie_title, content=content)
         self.tomatometer = standalone.tomatometer(self.movie_title, content=content)
