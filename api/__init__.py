@@ -45,13 +45,12 @@ class Movies(BaseModel):
     movies: list[MovieAttributes] = Field(..., title="A list of movies with attributes.")
 
 
-@app.get("/movie/{movie_name}", tags=["General"])
-async def movie_attributes(movie_name: str) -> MovieAttributes:
-    """Get a movie's attributes."""
-    if "_" in movie_name:
-        movie_name = movie_name.replace("_", " ")
-
-    movie = rt.Movie(movie_name)
+def build_movie(movie_name: str = "", force_url: str = "") -> MovieAttributes:
+    """Construct a dictionary adhering to MovieAttributes."""
+    if force_url:
+        movie = rt.Movie(force_url=force_url)
+    else:
+        movie = rt.Movie(movie_title=movie_name)
 
     return {
         "name": movie.movie_title,
@@ -64,4 +63,25 @@ async def movie_attributes(movie_name: str) -> MovieAttributes:
         "year": movie.year_released,
         "actors": movie.actors,
         "directors": movie.directors
+    }
+
+
+@app.get("/movie/{movie_name}", tags=["General"])
+async def movie_attributes(movie_name: str) -> MovieAttributes:
+    """Get a movie's attributes."""
+    if "_" in movie_name:
+        movie_name = movie_name.replace("_", " ")
+
+    return build_movie(movie_name)
+
+
+@app.get("/search/{movie_name}", tags=["General"])
+async def multi_movie_search(movie_name: str) -> Movies:
+    """Search for the movie and return a list of valid results."""
+    results = rt.search.filter_searches(results=rt.search.search_results(movie_name))
+
+    return {
+        "movies": [
+            build_movie(force_url=result.url) for result in results
+        ]
     }
