@@ -66,6 +66,12 @@ def build_movie(movie_name: str = "", force_url: str = "") -> MovieAttributes:
     }
 
 
+@app.get("/", tags=["Tests"])
+async def test_homepage() -> str:
+    """Check if the API is live."""
+    return "API is live. See /docs or /redoc for endpoints and usage instructions."
+
+
 @app.get("/movie/{movie_name}", tags=["General"])
 async def movie_attributes(movie_name: str) -> MovieAttributes:
     """Get a movie's attributes."""
