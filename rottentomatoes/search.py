@@ -41,7 +41,7 @@ class SearchListing:
     
     def __str__(self) -> str:
         """Represent the SearchListing object."""
-        return f"Title: {self.title}. Tomatometer: {self.has_tomatometer}. URL: {self.url}. Is movie: {self.is_movie}."
+        return f"Tomatometer: {self.has_tomatometer}. URL: {self.url}. Is movie: {self.is_movie}."
 
 
 def _movie_search_content(name: str) -> str:
