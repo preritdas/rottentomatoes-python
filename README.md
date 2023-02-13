@@ -10,6 +10,8 @@ This package allows you to easily fetch Rotten Tomatoes scores and other movie d
 
 The package now, by default, scrapes the Rotten Tomatoes search page to find the true url of the first valid movie response (is a movie and has a tomatometer). This means queries that previously didn't work because their urls had a unique identifier or a year-released prefix, now work. The limitation of this new mechanism is that you only get the top response, and when searching for specific movies (sequels, by year, etc.) Rotten Tomatoes seems to return the same results as the original query. So, it's difficult to use specific queries to try and get the desired result movie as the top response. See #4 for more info on this.
 
+There is now an API structure in place to make querying multiple movies and getting several responses easier. See the API section at the bottom for more.
+
 
 ## Usage
 
@@ -122,3 +124,141 @@ Prominent actors: Tom Cruise, Miles Teller, Jennifer Connelly, Jon Hamm, Glen Po
 
 That took 0.3400420409961953 seconds.
 ```
+
+## API
+
+The API isn't deployed anywhere (for now) but you can run it locally. It has two endpoints, `/movie/{movie_name}` and `/search/{movie_name}`. The first will pull one movie, the top result. The second will pull a list of _all_ valid movie results.
+
+The first, with `movie_name="bad boys"`:
+
+```json
+{
+  "name": "Bad Boys for Life",
+  "tomatometer": 76,
+  "audience_score": 96,
+  "weighted_score": 82,
+  "genres": [
+    "Action",
+    "Comedy"
+  ],
+  "rating": "R",
+  "duration": "2h 4m",
+  "year": "2020",
+  "actors": [
+    "Will Smith",
+    "Martin Lawrence",
+    "Vanessa Hudgens",
+    "Jacob Scipio",
+    "Alexander Ludwig"
+  ],
+  "directors": [
+    "Adil El Arbi",
+    "Bilall Fallah"
+  ]
+}
+```
+
+The second, with `movie_name="bad boys"`:
+
+```json
+{
+  "movies": [
+    {
+      "name": "Bad Boys for Life",
+      "tomatometer": 76,
+      "audience_score": 96,
+      "weighted_score": 82,
+      "genres": [
+        "Action",
+        "Comedy"
+      ],
+      "rating": "R",
+      "duration": "2h 4m",
+      "year": "2020",
+      "actors": [
+        "Will Smith",
+        "Martin Lawrence",
+        "Vanessa Hudgens",
+        "Jacob Scipio",
+        "Alexander Ludwig"
+      ],
+      "directors": [
+        "Adil El Arbi",
+        "Bilall Fallah"
+      ]
+    },
+    {
+      "name": "Bad Boys II",
+      "tomatometer": 23,
+      "audience_score": 78,
+      "weighted_score": 41,
+      "genres": [
+        "Action",
+        "Comedy"
+      ],
+      "rating": "R",
+      "duration": "2h 26m",
+      "year": "2003",
+      "actors": [
+        "Martin Lawrence",
+        "Will Smith",
+        "Jordi Mollà",
+        "Gabrielle Union",
+        "Peter Stormare"
+      ],
+      "directors": [
+        "Michael Bay"
+      ]
+    },
+    {
+      "name": "Bad Boys",
+      "tomatometer": 43,
+      "audience_score": 78,
+      "weighted_score": 54,
+      "genres": [
+        "Action",
+        "Comedy"
+      ],
+      "rating": "R",
+      "duration": "1h 58m",
+      "year": "1995",
+      "actors": [
+        "Martin Lawrence",
+        "Will Smith",
+        "Téa Leoni",
+        "Tchéky Karyo",
+        "Theresa Randle"
+      ],
+      "directors": [
+        "Michael Bay"
+      ]
+    },
+    {
+      "name": "Bad Boys",
+      "tomatometer": 90,
+      "audience_score": 82,
+      "weighted_score": 87,
+      "genres": [
+        "Drama"
+      ],
+      "rating": "R",
+      "duration": "2h 3m",
+      "year": "1983",
+      "actors": [
+        "Sean Penn",
+        "Reni Santoni",
+        "Esai Morales",
+        "Jim Moody",
+        "Ally Sheedy"
+      ],
+      "directors": [
+        "Rick Rosenthal 2"
+      ]
+    }
+  ]
+}
+```
+
+When deployed you can do this in the browser too...
+
+`http(s)://localhostordeployment/movie/bad_boys` for JSON response of the top result, or `http(s)://localhostordeployment/search/bad_boys` for a JSON response of all valid results.
