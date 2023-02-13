@@ -10,7 +10,10 @@ This package allows you to easily fetch Rotten Tomatoes scores and other movie d
 
 The package now, by default, scrapes the Rotten Tomatoes search page to find the true url of the first valid movie response (is a movie and has a tomatometer). This means queries that previously didn't work because their urls had a unique identifier or a year-released prefix, now work. The limitation of this new mechanism is that you only get the top response, and when searching for specific movies (sequels, by year, etc.) Rotten Tomatoes seems to return the same results as the original query. So, it's difficult to use specific queries to try and get the desired result movie as the top response. See #4 for more info on this.
 
-There is now an API structure in place to make querying multiple movies and getting several responses easier. See the API section at the bottom for more.
+There is now an API deployed to make querying multiple movies and getting several responses easier. The endpoint is https://rotten-tomatoes-api.ue.r.appspot.com and it's open and free to use. Visit `/docs` or `/redoc` in the browser to view the endpoints. Both endpoints live right now are browser accessible meaning you don't need an HTTP client to use the API. 
+
+- https://rotten-tomatoes-api.ue.r.appspot.com/movie/bad_boys for JSON response of the top result
+- https://rotten-tomatoes-api.ue.r.appspot.com/search/bad_boys for a JSON response of all valid results
 
 
 ## Usage
@@ -127,7 +130,7 @@ That took 0.3400420409961953 seconds.
 
 ## API
 
-The API isn't deployed anywhere (for now) but you can run it locally. It has two endpoints, `/movie/{movie_name}` and `/search/{movie_name}`. The first will pull one movie, the top result. The second will pull a list of _all_ valid movie results.
+The API is deployed at https://rotten-tomatoes-api.ue.r.appspot.com/. It has two endpoints currently, `/movie/{movie_name}` and `/search/{movie_name}`. The first will pull one movie, the top result. The second will pull a list of _all_ valid movie results.
 
 The first, with `movie_name="bad boys"`:
 
@@ -258,7 +261,3 @@ The second, with `movie_name="bad boys"`:
   ]
 }
 ```
-
-When deployed you can do this in the browser too...
-
-`http(s)://localhostordeployment/movie/bad_boys` for JSON response of the top result, or `http(s)://localhostordeployment/search/bad_boys` for a JSON response of all valid results.
