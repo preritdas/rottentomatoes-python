@@ -3,6 +3,9 @@
 [![PyPI version](https://badge.fury.io/py/rottentomatoes-python.svg)](https://badge.fury.io/py/rottentomatoes-python)
 ![versions](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10-blue)
 
+> **Warning**
+> As of 2/26/23, it seems Rotten Tomatoes has upgraded their site. This library no longer works as a result, but I am working on patching up all the old schemas so they work with the new site. 
+
 
 # :movie_camera: Rotten Tomatoes in Python (and API) :clapper:
 
