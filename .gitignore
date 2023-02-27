@@ -1,4 +1,5 @@
 venv/
+win_venv/
 __pycache__/
 sampleresponse.txt
 .DS_Store
