@@ -45,3 +45,8 @@ def test_actors():
         'Tom Hanks', 'Robin Wright', 'Gary Sinise', 'Mykelti Williamson', 'Sally Field'
     ]:
         assert actor in res
+
+
+def test_directors():
+    res = standalone.directors("happy gilmore")
+    assert "Dennis Dugan" in res
