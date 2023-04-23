@@ -25,7 +25,7 @@ class Movie:
         self.rating = standalone.rating(self.movie_title, content=content)
         self.duration = standalone.duration(self.movie_title, content=content)
         self.year_released = standalone.year_released(self.movie_title, content=content)
-        self.actors = standalone.actors(self.movie_title, max_actors=5, content=content)
+        self.actors = standalone.actors(self.movie_title, content=content)
         self.directors = standalone.directors(self.movie_title, max_directors=5, content=content)
 
     def __str__(self) -> str:
