@@ -23,7 +23,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -34,7 +33,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Upgrade pip
-        run: pip install -U pip setuptools wheel
+        run: pip install -U pip wheel
 
       - name: Install deps
         run: pip install -r requirements.txt
