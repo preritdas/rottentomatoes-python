@@ -39,9 +39,14 @@ def test_year_released():
 
 
 def test_actors():
-    res = standalone.actors("forrest gump", 5)
+    res = standalone.actors("forrest gump")
     
     for actor in [
         'Tom Hanks', 'Robin Wright', 'Gary Sinise', 'Mykelti Williamson', 'Sally Field'
     ]:
         assert actor in res
+
+
+def test_directors():
+    res = standalone.directors("happy gilmore")
+    assert "Dennis Dugan" in res

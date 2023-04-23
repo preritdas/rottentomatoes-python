@@ -2,6 +2,7 @@ wheel
 twine
 requests
 pyperclip
+beautifulsoup4
 
 # Server
 fastapi==0.91.0

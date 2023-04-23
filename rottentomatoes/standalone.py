@@ -1,4 +1,5 @@
 """Standalone functions to fetch attributes about a movie."""
+from bs4 import BeautifulSoup
 
 # Non-local imports
 import json
@@ -150,7 +151,7 @@ def tomatometer(movie_name: str, content: str = None) -> int:
     if content is None:
         content = _request(movie_name)
 
-    return _get_score_details(content)['scoreboard']['tomatometerScore']
+    return _get_score_details(content)['scoreboard']['tomatometerScore']["value"]
 
 
 def audience_score(movie_name: str, content: str = None) -> int:
@@ -171,7 +172,7 @@ def audience_score(movie_name: str, content: str = None) -> int:
     if content is None:
         content = _request(movie_name)
 
-    return _get_score_details(content)['scoreboard']['audienceScore']
+    return _get_score_details(content)['scoreboard']['audienceScore']["value"]
 
 
 def genres(movie_name: str, content: str = None) -> List[str]:
@@ -232,26 +233,30 @@ def year_released(movie_name: str, content: str = None) -> str:
     return release_year
 
 
-def actors(movie_name: str, max_actors: int = 100, content: str = None) -> List[str]:
-    """Returns a list of all the actors listed
-    by Rotten Tomatoes. Specify `max_actors` to only receive
-    a certain number of the most prominent actors in the film."""
+def actors(movie_name: str, content: str = None) -> List[str]:
+    """
+    Returns a list of the top 5 actors listed by Rotten Tomatoes.
+    """
     if content is None:
         content = _request(movie_name)
 
-    # Find all instances
-    actors = []
-    start_string = '<span class="characters subtle smaller" title="'
-    while len(actors) < max_actors:
-        actor = _extract(content, start_string, '">')
-        # If no other actors can be extracted
-        if actor is None:
-            break
-        actors.append(actor)
-        # Continue traversing content for more actors
-        content = content[content.find(start_string)+len(start_string):]
+    def _get_top_n_actors(html, n):
+        soup = BeautifulSoup(html, 'html.parser')
+        cast_items = soup.find_all('div', {'data-qa': 'cast-crew-item'})
+        
+        top_actors = []
+        
+        for i, cast_item in enumerate(cast_items):
+            if i == n:
+                break
+            
+            actor_name = cast_item.find('p').text.strip()
+            top_actors.append(actor_name)
+        
+        return top_actors
 
-    return actors[:max_actors]
+    return _get_top_n_actors(content, 5)
+
 
 def directors(movie_name: str, max_directors: int = 10, content: str = None) -> List[str]:
     """Returns a list of all the directors listed
