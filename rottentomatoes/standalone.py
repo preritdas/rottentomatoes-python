@@ -150,7 +150,7 @@ def tomatometer(movie_name: str, content: str = None) -> int:
     if content is None:
         content = _request(movie_name)
 
-    return _get_score_details(content)['scoreboard']['tomatometerScore']
+    return _get_score_details(content)['scoreboard']['tomatometerScore']["value"]
 
 
 def audience_score(movie_name: str, content: str = None) -> int:
@@ -171,7 +171,7 @@ def audience_score(movie_name: str, content: str = None) -> int:
     if content is None:
         content = _request(movie_name)
 
-    return _get_score_details(content)['scoreboard']['audienceScore']
+    return _get_score_details(content)['scoreboard']['audienceScore']["value"]
 
 
 def genres(movie_name: str, content: str = None) -> List[str]:
