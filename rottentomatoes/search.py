@@ -4,6 +4,7 @@ import requests
 import re
 from typing import List
 
+from . import utils
 from .exceptions import LookupError
 
 
@@ -48,7 +49,7 @@ def _movie_search_content(name: str) -> str:
     """Raw HTML content from searching for a movie."""
     url_name = "%20".join(name.split())
     url = f"https://www.rottentomatoes.com/search?search={url_name}"
-    content = str(requests.get(url).content)
+    content = str(requests.get(url, headers=utils.REQUEST_HEADERS).content)
     
     # Remove misc quotes from conversion
     content = content[2:-1]

@@ -9,6 +9,7 @@ from typing import List
 # Project modules
 from .exceptions import *
 from . import search
+from . import utils
 
 
 def _movie_url(movie_name: str) -> str:
@@ -110,7 +111,7 @@ def _request(movie_name: str, raw_url: bool = False, force_url: str = "") -> str
         search_result = search.top_movie_result(movie_name)
         rt_url = search_result.url
     
-    response = requests.get(rt_url)
+    response = requests.get(rt_url, headers=utils.REQUEST_HEADERS)
 
     if response.status_code == 404:
         raise LookupError(
