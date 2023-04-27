@@ -1,7 +1,9 @@
 from setuptools import setup, find_packages
 
 
-VERSION = "0.5.15"
+with open("VERSION", "r", encoding="utf-8") as f:
+    VERSION = f.read()
+
 DESCRIPTION = (
     "Scrape Rotten Tomatoes's website for basic information on movies, without the "
     "use of their hard-to-attain official REST API."
