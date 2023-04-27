@@ -2,8 +2,9 @@ name: pypi deployment
 
 
 on:
-  release:
-    types: [published]
+  push:
+    paths:
+      - setup.py
   workflow_dispatch:
 
 
@@ -32,7 +33,6 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
-
   deploy:
     needs: test
     runs-on: ubuntu-latest
@@ -51,20 +51,6 @@ jobs:
         python -m pip install -U pip
         pip install -U pip build setuptools wheel twine
 
-    - name: Insert the version name
-      run: echo "${{ github.ref_name }}" >> VERSION
-
-    - name: Commit the updated ref name
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git fetch --all
-        git pull origin master
-        git checkout master
-        git add VERSION
-        git commit --author="Prerit Das <preritdas@gmail.com>" -m "Bump version to ${{ github.ref_name }}."
-        git push origin master
-
     - name: Build package
       run: python -m build
 
@@ -73,3 +59,4 @@ jobs:
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
+        
