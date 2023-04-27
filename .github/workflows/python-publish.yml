@@ -61,7 +61,7 @@ jobs:
         git pull origin master
         git add VERSION
         git commit --author="Prerit Das <preritdas@gmail.com>" -m "Bump version to ${{ github.ref_name }}."
-        git push
+        git push origin master
 
     - name: Build package
       run: python -m build
