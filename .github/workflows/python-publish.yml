@@ -58,7 +58,9 @@ jobs:
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git fetch --all
         git pull origin master
+        git checkout master
         git add VERSION
         git commit --author="Prerit Das <preritdas@gmail.com>" -m "Bump version to ${{ github.ref_name }}."
         git push origin master
