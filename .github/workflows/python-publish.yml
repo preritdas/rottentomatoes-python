@@ -4,7 +4,7 @@ name: pypi deployment
 on:
   push:
     paths:
-      - VERSION
+      - setup.py
   workflow_dispatch:
 
 
