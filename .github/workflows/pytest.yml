@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - README.md
       - setup.py
+      - VERSION
       - .gitignore
       - Sample Web Response.txt
       - .github/workflows/python-publish.yml
