@@ -127,11 +127,11 @@ def movie_title(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
 
-    find_str = "score-panel-movie-title"
-    loc = content.find(find_str) + len(find_str) + 2
+    find_str = '<meta property="og:title" content='
+    loc = content.find(find_str) + len(find_str)
     substring = content[loc:loc+100]  # enough breathing room
-    subs = substring.split("<")
-    return subs[0]
+    subs = substring.split('>')
+    return subs[0][1:-1]
 
 
 def tomatometer(movie_name: str, content: str = None) -> int:
