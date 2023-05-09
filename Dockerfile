@@ -1,4 +1,4 @@
-FROM python:3.11.2-bullseye
+FROM python:3.11.3-bullseye
 
 WORKDIR /app
 
