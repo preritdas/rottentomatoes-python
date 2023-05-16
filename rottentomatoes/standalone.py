@@ -82,7 +82,7 @@ def _get_score_details(content: str) -> object:
     return json.loads(
         _extract(
             content,
-            '<script id="score-details-json" type="application/json">',
+            '<script id="scoreDetails" type="application/json">',
             '</script>'
         )
     )
