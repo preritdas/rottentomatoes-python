@@ -234,7 +234,7 @@ def year_released(movie_name: str, content: str = None) -> str:
     return release_year
 
 
-def actors(movie_name: str, content: str = None) -> List[str]:
+def actors(movie_name: str, max_actors: int = 5, content: str = None) -> List[str]:
     """
     Returns a list of the top 5 actors listed by Rotten Tomatoes.
     """
@@ -256,7 +256,7 @@ def actors(movie_name: str, content: str = None) -> List[str]:
         
         return top_actors
 
-    return _get_top_n_actors(content, 5)
+    return _get_top_n_actors(content, max_actors)
 
 
 def directors(movie_name: str, max_directors: int = 10, content: str = None) -> List[str]:
