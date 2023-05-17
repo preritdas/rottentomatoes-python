@@ -54,7 +54,7 @@ print(rt.year_released('happy gilmore'))
 # Output: 1996
 # Type: str
 
-print(rt.actors('top gun maverick'))
+print(rt.actors('top gun maverick', max_actors=5))
 # Output: ['Tom Cruise', 'Miles Teller', 'Jennifer Connelly', 'Jon Hamm', 'Glen Powell']
 # Type: list[str]
 
