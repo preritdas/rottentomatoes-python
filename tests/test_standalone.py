@@ -39,7 +39,7 @@ def test_year_released(forrest_gump_content):
 
 
 def test_actors(forrest_gump_content):
-    res = standalone.actors("forrest gump", forrest_gump_content)
+    res = standalone.actors("forrest gump", 5, forrest_gump_content)
     
     for actor in [
         'Tom Hanks', 'Robin Wright', 'Gary Sinise', 'Mykelti Williamson', 'Sally Field'
