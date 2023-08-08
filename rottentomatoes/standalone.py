@@ -74,7 +74,7 @@ def _get_score_details(content: str) -> object:
     typically contains audience score, ratings, duration etc.
 
     Args:
-        movie_name (str): Title of the movie. Case insensitive.
+       content (str): The raw RT data for a movie.
 
     Returns:
         object: The scoreboard data for the movie.
