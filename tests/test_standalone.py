@@ -50,3 +50,16 @@ def test_actors(forrest_gump_content):
 def test_directors(happy_gilmore_content):
     res = standalone.directors("happy gilmore", content=happy_gilmore_content)
     assert "Dennis Dugan" in res
+
+def test_image(happy_gilmore_content):
+    assert standalone.image("happy gilmore", happy_gilmore_content) == \
+        'https://resizing.flixster.com/VZQSie9tac4G0lKV1jWlGfhMXTk=/206x305/v2/https://flxt.tmsimg.com/assets/p17735_p_v8_aa.jpg'
+
+def test_url(happy_gilmore_content):
+    assert standalone.url("happy gilmore", happy_gilmore_content) == \
+        'https://www.rottentomatoes.com/m/happy_gilmore'
+
+def test_critics_consensus(happy_gilmore_content):
+    assert standalone.critics_consensus("happy gilmore", happy_gilmore_content) == \
+        "Those who enjoy Adam Sandler's schtick will find plenty to love in this gleefully juvenile take on professional golf; "+\
+        "those who don't, however, will find it unfunny and forgettable."
