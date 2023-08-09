@@ -27,6 +27,9 @@ class Movie:
         self.year_released = standalone.year_released(self.movie_title, content=content)
         self.actors = standalone.actors(self.movie_title, content=content)
         self.directors = standalone.directors(self.movie_title, max_directors=5, content=content)
+        self.image = standalone.image(self.movie_title, content=content)
+        self.url = standalone.url(self.movie_title, content=content)
+        self.critics_consensus = standalone.critics_consensus(self.movie_title, content=content)
 
     def __str__(self) -> str:
         return f"{self.movie_title.title()}, {self.rating}, {self.duration}.\n" \

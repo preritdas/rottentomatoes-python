@@ -74,7 +74,7 @@ def _get_score_details(content: str) -> object:
     typically contains audience score, ratings, duration etc.
 
     Args:
-        movie_name (str): Title of the movie. Case insensitive.
+       content (str): The raw RT data for a movie.
 
     Returns:
         object: The scoreboard data for the movie.
@@ -270,3 +270,20 @@ def directors(movie_name: str, max_directors: int = 10, content: str = None) -> 
     directors = _get_schema_json_ld(content)["director"][:max_directors]
 
     return [get_name(n["sameAs"]).replace("-", " ") for n in directors]
+
+
+def image(movie_name: str, content: str = None) -> str:
+    if content is None:
+        content = _request(movie_name)
+    return _get_schema_json_ld(content)['image']
+
+def url(movie_name: str, content: str = None) -> str:
+    if content is None:
+        content = _request(movie_name)
+    return _get_schema_json_ld(content)['url']
+
+def critics_consensus(movie_name: str, content: str = None) -> str:
+    if content is None:
+        content = _request(movie_name)
+    return _extract(content,'<span data-qa="critics-consensus">','</span>')
+
