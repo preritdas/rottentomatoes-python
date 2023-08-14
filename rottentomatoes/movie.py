@@ -1,5 +1,4 @@
 """Contains classes that auto fetch all attributes."""
-
 from . import standalone
 
 
