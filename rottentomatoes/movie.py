@@ -33,7 +33,7 @@ class Movie:
     def __str__(self) -> str:
         return f"{self.movie_title.title()}, {self.rating}, {self.duration}.\n" \
             f"Released in {self.year_released}.\n" \
-            f"Directed by {', '.join(self.actors)}.\n" \
+            f"Directed by {', '.join(self.directors)}.\n" \
             f"Tomatometer: {self.tomatometer}\n" \
             f"Weighted score: {self.weighted_score}\n" \
             f"Audience Score: {self.audience_score}\nGenres - {self.genres}\n" \
