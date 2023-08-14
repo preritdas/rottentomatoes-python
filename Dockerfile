@@ -4,8 +4,7 @@ WORKDIR /app
 
 COPY requirements.txt .
 
-RUN pip install -U pip && \
-  pip install -U wheel && \
+RUN pip install -U pip wheel && \
   pip install -r requirements.txt
   
 COPY . .
