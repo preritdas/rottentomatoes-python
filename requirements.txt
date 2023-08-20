@@ -5,6 +5,7 @@ pyperclip
 beautifulsoup4
 
 # Server
-fastapi==0.99.1
-gunicorn==20.1.0
-uvicorn==0.20.0
+fastapi==0.101.1
+pydantic==2.2.1
+gunicorn==21.2.0
+uvicorn==0.23.2
