@@ -2,7 +2,7 @@
 ![pypi](https://github.com/preritdas/rottentomatoes-python/actions/workflows/python-publish.yml/badge.svg)
 [![PyPI version](https://badge.fury.io/py/rottentomatoes-python.svg)](https://badge.fury.io/py/rottentomatoes-python)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/rottentomatoes-python)
-![versions](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-blue)
+![versions](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue)
 
 
 # :movie_camera: Rotten Tomatoes in Python (and API) :clapper:
