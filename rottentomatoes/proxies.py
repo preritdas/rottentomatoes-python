@@ -1,6 +1,7 @@
 """Check proxies."""
 import requests
 
+import random
 from threading import Thread
 from queue import Queue
 
@@ -15,6 +16,11 @@ PROXIES: list[str] = [
     '192.141.196.129:8080', 
     '147.139.189.38:8080'
 ]
+
+
+def get_random_proxy() -> str:
+    """Get a random proxy."""
+    return random.choice(PROXIES)
 
 
 def _check_proxy(ip: str) -> bool:
