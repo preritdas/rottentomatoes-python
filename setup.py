@@ -23,7 +23,7 @@ setup(
     long_description=read_me(),
     long_description_content_type="text/markdown",
     packages=find_packages(),
-    install_requires=["requests"],
+    install_requires=["requests", "beautifulsoup4"],
     keywords=["python", "movies", "rottentomatoes"],
     classifiers=[
         "Programming Language :: Python :: 3",
