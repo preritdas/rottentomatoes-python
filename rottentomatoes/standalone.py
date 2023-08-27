@@ -7,6 +7,7 @@ import requests  # interact with RT website
 from typing import List
 
 # Project modules
+from .proxies import get_random_proxy
 from .exceptions import *
 from . import search
 from . import utils
@@ -111,7 +112,11 @@ def _request(movie_name: str, raw_url: bool = False, force_url: str = "") -> str
         search_result = search.top_movie_result(movie_name)
         rt_url = search_result.url
     
-    response = requests.get(rt_url, headers=utils.REQUEST_HEADERS)
+    response = requests.get(
+        rt_url, 
+        headers=utils.REQUEST_HEADERS,
+        proxies={"https": get_random_proxy()}
+    )
 
     if response.status_code == 404:
         raise LookupError(
