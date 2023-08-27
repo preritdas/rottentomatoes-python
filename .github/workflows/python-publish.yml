@@ -5,6 +5,8 @@ on:
   push:
     paths:
       - setup.py
+    branches:
+      - master
   workflow_dispatch:
 
 
