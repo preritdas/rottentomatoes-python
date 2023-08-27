@@ -1,6 +1,9 @@
 """Check proxies."""
 import requests
 
+from threading import Thread
+from queue import Queue
+
 
 PROXIES = [
     "50.217.226.40:80",
@@ -314,7 +317,11 @@ def _check_proxy(ip: str) -> bool:
             proxies={"http": ip, "https": ip},
             timeout=7
         )
-    except (requests.exceptions.ReadTimeout, requests.exceptions.ProxyError):
+    except (
+        requests.exceptions.ReadTimeout, 
+        requests.exceptions.ProxyError, 
+        requests.exceptions.ConnectionError
+    ):
         return False
 
     if response.status_code == 200:
