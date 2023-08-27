@@ -38,7 +38,7 @@ jobs:
         run: pip install -U pip wheel
 
       - name: Install deps
-        run: pip install -r requirements.txt
+        run: pip install .
 
       - name: Install test deps
         run: pip install pytest
