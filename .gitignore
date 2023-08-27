@@ -3,6 +3,7 @@ win_venv/
 __pycache__/
 sampleresponse.txt
 .DS_Store
+.vscode/
 
 # Dist files
 removedists
