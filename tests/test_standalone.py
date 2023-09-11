@@ -53,7 +53,7 @@ def test_directors(happy_gilmore_content):
 
 def test_image(happy_gilmore_content):
     assert standalone.image("happy gilmore", happy_gilmore_content) == \
-        'https://resizing.flixster.com/PCiIIs4sd_yqgaFMYG2sZT6Vbgo=/206x305/v2/https://flxt.tmsimg.com/assets/p17735_p_v8_aj.jpg'
+        'https://flxt.tmsimg.com/assets/p17735_p_v8_aj.jpg'
 
 def test_url(happy_gilmore_content):
     assert standalone.url("happy gilmore", happy_gilmore_content) == \
