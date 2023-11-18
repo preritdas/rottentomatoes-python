@@ -13,9 +13,9 @@ class MovieQuery(BaseModel):
 class MovieAttributes(BaseModel):
     """Output, movie attributes."""
     name: str = Field(..., title="Name of the movie according to its page.")
-    tomatometer: int = Field(..., title="Rotten Tomatoes Tomatometer.")
-    audience_score: int = Field(..., title="Rotten Tomatoes audience score.")
-    weighted_score: int = Field(
+    tomatometer: int | None = Field(..., title="Rotten Tomatoes Tomatometer.")
+    audience_score: int | None = Field(..., title="Rotten Tomatoes audience score.")
+    weighted_score: int | None = Field(
         ...,
         title="Internally formulated weighted score between tomatometer and audience score.",
     )
