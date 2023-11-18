@@ -277,13 +277,14 @@ def image(movie_name: str, content: str = None) -> str:
         content = _request(movie_name)
     return _get_schema_json_ld(content)['image']
 
+
 def url(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
     return _get_schema_json_ld(content)['url']
 
+
 def critics_consensus(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
     return _extract(content,'<span data-qa="critics-consensus">','</span>')
-
