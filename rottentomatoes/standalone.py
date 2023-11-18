@@ -197,13 +197,27 @@ def genres(movie_name: str, content: str = None) -> List[str]:
     return _get_schema_json_ld(content)['genre']
 
 
-def weighted_score(movie_name: str, content: str = None) -> int:
-    """2/3 tomatometer, 1/3 audience score."""
+def weighted_score(movie_name: str, content: str = None) -> int | None:
+    """
+    2/3 tomatometer, 1/3 audience score. Returns None if both scores are None.
+    If one score is None, the other is returned.
+    """
     if content is None:
         content = _request(movie_name)
 
+    if t_score is None and a_score is None:
+        return None
+
+    if t_score is None:
+        return a_score
+
+    if a_score is None:
+        return t_score
+
     return int((2/3) * tomatometer(movie_name, content=content) +
                (1/3) * audience_score(movie_name, content=content))
+
+    return int((2/3) * t_score + ((1/3) * a_score))
 
 
 def rating(movie_name: str, content: str = None) -> str:
