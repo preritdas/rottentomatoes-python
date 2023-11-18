@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 # Non-local imports
 import json
 import requests  # interact with RT website
-from typing import List
+from typing import List, Union
 
 # Project modules
 from .exceptions import *
@@ -134,7 +134,7 @@ def movie_title(movie_name: str, content: str = None) -> str:
     return subs[0][1:-1]
 
 
-def tomatometer(movie_name: str, content: str = None) -> int | None:
+def tomatometer(movie_name: str, content: str = None) -> Union[int, None]:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. 
 
@@ -161,7 +161,7 @@ def tomatometer(movie_name: str, content: str = None) -> int | None:
     return scoreboard["value"]
 
 
-def audience_score(movie_name: str, content: str = None) -> int | None:
+def audience_score(movie_name: str, content: str = None) -> Union[int, None]:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. 
 
@@ -209,7 +209,7 @@ def genres(movie_name: str, content: str = None) -> List[str]:
     return _get_schema_json_ld(content)['genre']
 
 
-def weighted_score(movie_name: str, content: str = None) -> int | None:
+def weighted_score(movie_name: str, content: str = None) -> Union[int, None]:
     """
     2/3 tomatometer, 1/3 audience score. Returns None if both scores are None.
     If one score is None, the other is returned.
