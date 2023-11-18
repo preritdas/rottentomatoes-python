@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 # Non-local imports
 import json
 import requests  # interact with RT website
-from typing import List
+from typing import List, Union
 
 # Project modules
 from .exceptions import *
@@ -134,7 +134,7 @@ def movie_title(movie_name: str, content: str = None) -> str:
     return subs[0][1:-1]
 
 
-def tomatometer(movie_name: str, content: str = None) -> int:
+def tomatometer(movie_name: str, content: str = None) -> Union[int, None]:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. 
 
@@ -148,14 +148,20 @@ def tomatometer(movie_name: str, content: str = None) -> int:
 
     Returns:
         int: Tomatometer of `movie_name`.
+        None: If the movie doesn't have a tomatometer.
     """
     if content is None:
         content = _request(movie_name)
 
-    return _get_score_details(content)['scoreboard']['tomatometerScore']["value"]
+    scoreboard = _get_score_details(content)['scoreboard']['tomatometerScore']
+
+    if "value" not in scoreboard:
+        return None
+
+    return scoreboard["value"]
 
 
-def audience_score(movie_name: str, content: str = None) -> int:
+def audience_score(movie_name: str, content: str = None) -> Union[int, None]:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. 
 
@@ -169,11 +175,17 @@ def audience_score(movie_name: str, content: str = None) -> int:
 
     Returns:
         int: Tomatometer of `movie_name`.
+        None: If the movie doesn't have an audience score.
     """
     if content is None:
         content = _request(movie_name)
 
-    return _get_score_details(content)['scoreboard']['audienceScore']["value"]
+    scoreboard = _get_score_details(content)['scoreboard']['audienceScore']
+
+    if "value" not in scoreboard:
+        return None
+    
+    return scoreboard["value"]
 
 
 def genres(movie_name: str, content: str = None) -> List[str]:
@@ -197,13 +209,27 @@ def genres(movie_name: str, content: str = None) -> List[str]:
     return _get_schema_json_ld(content)['genre']
 
 
-def weighted_score(movie_name: str, content: str = None) -> int:
-    """2/3 tomatometer, 1/3 audience score."""
+def weighted_score(movie_name: str, content: str = None) -> Union[int, None]:
+    """
+    2/3 tomatometer, 1/3 audience score. Returns None if both scores are None.
+    If one score is None, the other is returned.
+    """
     if content is None:
         content = _request(movie_name)
 
-    return int((2/3) * tomatometer(movie_name, content=content) +
-               (1/3) * audience_score(movie_name, content=content))
+    t_score = tomatometer(movie_name, content)
+    a_score = audience_score(movie_name, content)
+
+    if t_score is None and a_score is None:
+        return None
+
+    if t_score is None:
+        return a_score
+
+    if a_score is None:
+        return t_score
+
+    return int((2/3) * t_score + ((1/3) * a_score))
 
 
 def rating(movie_name: str, content: str = None) -> str:
@@ -221,6 +247,7 @@ def duration(movie_name: str, content: str = None) -> str:
 
     return_duration = _get_score_details(
         content)['scoreboard']['info'].split(',')[-1]
+
     return return_duration.replace(' ', '', 1)
 
 
@@ -231,6 +258,7 @@ def year_released(movie_name: str, content: str = None) -> str:
 
     release_year = _get_score_details(
         content)['scoreboard']['info'].split(',')[0]
+
     return release_year
 
 
@@ -275,15 +303,19 @@ def directors(movie_name: str, max_directors: int = 10, content: str = None) -> 
 def image(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
+
     return _get_schema_json_ld(content)['image']
+
 
 def url(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
+
     return _get_schema_json_ld(content)['url']
+
 
 def critics_consensus(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
-    return _extract(content,'<span data-qa="critics-consensus">','</span>')
 
+    return _extract(content,'<span data-qa="critics-consensus">','</span>')
