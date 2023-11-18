@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 
-VERSION = "0.6.3"
+VERSION = "0.6.4"
 DESCRIPTION = (
     "Scrape Rotten Tomatoes's website for basic information on movies, without the "
     "use of their hard-to-attain official REST API."
@@ -25,6 +25,7 @@ setup(
     packages=find_packages(),
     install_requires=["requests", "beautifulsoup4"],
     keywords=["python", "movies", "rottentomatoes"],
+    url="https://github.com/preritdas/rottentomatoes-python",
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: Unix",
