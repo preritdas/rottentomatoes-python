@@ -221,6 +221,7 @@ def duration(movie_name: str, content: str = None) -> str:
 
     return_duration = _get_score_details(
         content)['scoreboard']['info'].split(',')[-1]
+
     return return_duration.replace(' ', '', 1)
 
 
@@ -231,6 +232,7 @@ def year_released(movie_name: str, content: str = None) -> str:
 
     release_year = _get_score_details(
         content)['scoreboard']['info'].split(',')[0]
+
     return release_year
 
 
@@ -275,16 +277,19 @@ def directors(movie_name: str, max_directors: int = 10, content: str = None) -> 
 def image(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
+
     return _get_schema_json_ld(content)['image']
 
 
 def url(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
+
     return _get_schema_json_ld(content)['url']
 
 
 def critics_consensus(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
+
     return _extract(content,'<span data-qa="critics-consensus">','</span>')
