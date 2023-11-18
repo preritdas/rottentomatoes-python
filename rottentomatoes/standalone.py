@@ -134,7 +134,7 @@ def movie_title(movie_name: str, content: str = None) -> str:
     return subs[0][1:-1]
 
 
-def tomatometer(movie_name: str, content: str = None) -> int:
+def tomatometer(movie_name: str, content: str = None) -> int | None:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. 
 
@@ -148,14 +148,20 @@ def tomatometer(movie_name: str, content: str = None) -> int:
 
     Returns:
         int: Tomatometer of `movie_name`.
+        None: If the movie doesn't have a tomatometer.
     """
     if content is None:
         content = _request(movie_name)
 
-    return _get_score_details(content)['scoreboard']['tomatometerScore']["value"]
+    scoreboard = _get_score_details(content)['scoreboard']['tomatometerScore']
+
+    if "value" not in scoreboard:
+        return None
+
+    return scoreboard["value"]
 
 
-def audience_score(movie_name: str, content: str = None) -> int:
+def audience_score(movie_name: str, content: str = None) -> int | None:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. 
 
@@ -169,11 +175,17 @@ def audience_score(movie_name: str, content: str = None) -> int:
 
     Returns:
         int: Tomatometer of `movie_name`.
+        None: If the movie doesn't have an audience score.
     """
     if content is None:
         content = _request(movie_name)
 
-    return _get_score_details(content)['scoreboard']['audienceScore']["value"]
+    scoreboard = _get_score_details(content)['scoreboard']['audienceScore']
+
+    if "value" not in scoreboard:
+        return None
+    
+    return scoreboard["value"]
 
 
 def genres(movie_name: str, content: str = None) -> List[str]:
