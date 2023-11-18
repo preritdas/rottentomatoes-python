@@ -17,3 +17,8 @@ def top_gun_mav_content():
 @pytest.fixture(scope="session")
 def forrest_gump_content():
     return _request("forrest gump")
+
+
+@pytest.fixture(scope="session")
+def the_beast_content():
+    return _request("the beast")

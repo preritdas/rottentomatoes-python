@@ -18,6 +18,10 @@ def test_audience_score(happy_gilmore_content):
     assert standalone.audience_score("happy gilmore", happy_gilmore_content) == 85
 
 
+def test_no_audience_score(the_beast_content):
+    assert standalone.audience_score("the beast", the_beast_content) is None
+
+
 def test_genres(happy_gilmore_content):
     assert standalone.genres("happy gilmore", happy_gilmore_content) == ["Comedy"]
 
@@ -51,13 +55,16 @@ def test_directors(happy_gilmore_content):
     res = standalone.directors("happy gilmore", content=happy_gilmore_content)
     assert "Dennis Dugan" in res
 
+
 def test_image(happy_gilmore_content):
     assert standalone.image("happy gilmore", happy_gilmore_content) == \
         'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p17735_p_v8_aj.jpg'
 
+
 def test_url(happy_gilmore_content):
     assert standalone.url("happy gilmore", happy_gilmore_content) == \
         'https://www.rottentomatoes.com/m/happy_gilmore'
+
 
 def test_critics_consensus(happy_gilmore_content):
     assert standalone.critics_consensus("happy gilmore", happy_gilmore_content) == \
