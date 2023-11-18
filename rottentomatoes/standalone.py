@@ -217,6 +217,9 @@ def weighted_score(movie_name: str, content: str = None) -> int | None:
     if content is None:
         content = _request(movie_name)
 
+    t_score = tomatometer(movie_name, content)
+    a_score = audience_score(movie_name, content)
+
     if t_score is None and a_score is None:
         return None
 
@@ -225,9 +228,6 @@ def weighted_score(movie_name: str, content: str = None) -> int | None:
 
     if a_score is None:
         return t_score
-
-    return int((2/3) * tomatometer(movie_name, content=content) +
-               (1/3) * audience_score(movie_name, content=content))
 
     return int((2/3) * t_score + ((1/3) * a_score))
 
