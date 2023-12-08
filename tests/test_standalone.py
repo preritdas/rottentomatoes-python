@@ -1,4 +1,5 @@
 from rottentomatoes import standalone
+import pytest
 
 
 def test_tomatometer(top_gun_mav_content):
@@ -18,6 +19,7 @@ def test_audience_score(happy_gilmore_content):
     assert standalone.audience_score("happy gilmore", happy_gilmore_content) == 85
 
 
+@pytest.mark.skip(reason="Audience score for this movie was added.")
 def test_no_audience_score(the_beast_content):
     assert standalone.audience_score("the beast", the_beast_content) is None
 
