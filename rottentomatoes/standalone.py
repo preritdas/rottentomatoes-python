@@ -128,11 +128,9 @@ def movie_title(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
 
-    find_str = '<meta property="og:title" content='
-    loc = content.find(find_str) + len(find_str)
-    substring = content[loc:loc+100]  # enough breathing room
-    subs = substring.split('>')
-    return subs[0][1:-1]
+    soup = BeautifulSoup(content, 'html.parser')
+    return soup.find('h1', {"slot": "titleIntro"}).text.strip()
+    
 
 
 def tomatometer(movie_name: str, content: str = None) -> Union[int, None]:
@@ -267,18 +265,21 @@ def actors(movie_name: str, max_actors: int = 5, content: str = None) -> List[st
 
     def _get_top_n_actors(html, n):
         soup = BeautifulSoup(html, 'html.parser')
-        cast_items = soup.find_all('div', {'data-qa': 'cast-crew-item'})
+        cast_items = soup.find_all('a', {'data-qa': 'person-item'})
         
         top_actors = []
-        
-        for i, cast_item in enumerate(cast_items):
+        i = 0
+        for cast_item in cast_items:
             if i == n:
                 break
-            
-            actor_name = cast_item.find('p').text.strip()
-            top_actors.append(actor_name)
-        
+            name = cast_item.find('p', {'data-qa': 'person-name'}).text
+            role = cast_item.find('p', {'data-qa': 'person-role'}).text
+            if "Director" in role:
+                continue
+            top_actors.append(name)
+            i += 1
         return top_actors
+
 
     return _get_top_n_actors(content, max_actors)
 
@@ -314,4 +315,8 @@ def critics_consensus(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
 
-    return _extract(content,'<span data-qa="critics-consensus">','</span>')
+    soup = BeautifulSoup(content, 'html.parser')
+
+    return soup.find('div', {'id': 'critics-consensus'}).text.replace("Critics Consensus", "").replace("\nRead Critics Reviews", "").strip()
+    
+
