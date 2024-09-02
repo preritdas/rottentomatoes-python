@@ -79,14 +79,15 @@ def _get_score_details(content: str) -> object:
     Returns:
         object: The scoreboard data for the movie.
     """
-    return json.loads(
-        _extract(
-            content,
-            '<script id="scoreDetails" type="application/json">',
-            '</script>'
-        )
-    )
+    soup = BeautifulSoup(content, 'html.parser')
 
+    tomatometer_score = int(soup.find('rt-button', {'slot': 'criticsScore'}).text.strip("%\n"))
+    audience_score = int(soup.find('rt-button', {'slot': 'audienceScore'}).text.strip("%\n"))
+    rating = soup.find('rt-text', {'slot': 'ratingsCode'}).text
+    release_date = soup.find('rt-text', {'slot': 'releaseDate'}).text.strip("Released ")
+    duration = soup.find('rt-text', {'slot': 'duration'}).text
+    
+    return {"tomatometerScore": tomatometer_score, "audienceScore": audience_score, "rating": rating, "releaseDate": release_date, "duration": duration}
 
 def _request(movie_name: str, raw_url: bool = False, force_url: str = "") -> str:
     """Scrapes Rotten Tomatoes for the raw website data, to be
@@ -127,11 +128,9 @@ def movie_title(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
 
-    find_str = '<meta property="og:title" content='
-    loc = content.find(find_str) + len(find_str)
-    substring = content[loc:loc+100]  # enough breathing room
-    subs = substring.split('>')
-    return subs[0][1:-1]
+    soup = BeautifulSoup(content, 'html.parser')
+    return soup.find('h1', {"slot": "titleIntro"}).text.strip()
+    
 
 
 def tomatometer(movie_name: str, content: str = None) -> Union[int, None]:
@@ -153,12 +152,11 @@ def tomatometer(movie_name: str, content: str = None) -> Union[int, None]:
     if content is None:
         content = _request(movie_name)
 
-    scoreboard = _get_score_details(content)['scoreboard']['tomatometerScore']
+    value = _get_score_details(content)['tomatometerScore']
 
-    if "value" not in scoreboard:
+    if not value:
         return None
-
-    return scoreboard["value"]
+    return value
 
 
 def audience_score(movie_name: str, content: str = None) -> Union[int, None]:
@@ -180,12 +178,11 @@ def audience_score(movie_name: str, content: str = None) -> Union[int, None]:
     if content is None:
         content = _request(movie_name)
 
-    scoreboard = _get_score_details(content)['scoreboard']['audienceScore']
+    value = _get_score_details(content)['audienceScore']
 
-    if "value" not in scoreboard:
+    if not value:
         return None
-    
-    return scoreboard["value"]
+    return value
 
 
 def genres(movie_name: str, content: str = None) -> List[str]:
@@ -237,7 +234,7 @@ def rating(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
 
-    return _get_score_details(content)['scoreboard']['rating']
+    return _get_score_details(content)['rating']
 
 
 def duration(movie_name: str, content: str = None) -> str:
@@ -245,10 +242,7 @@ def duration(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
 
-    return_duration = _get_score_details(
-        content)['scoreboard']['info'].split(',')[-1]
-
-    return return_duration.replace(' ', '', 1)
+    return _get_score_details(content)['duration']
 
 
 def year_released(movie_name: str, content: str = None) -> str:
@@ -257,7 +251,7 @@ def year_released(movie_name: str, content: str = None) -> str:
         content = _request(movie_name)
 
     release_year = _get_score_details(
-        content)['scoreboard']['info'].split(',')[0]
+        content)['releaseDate'].split(',')[1].strip()
 
     return release_year
 
@@ -271,18 +265,21 @@ def actors(movie_name: str, max_actors: int = 5, content: str = None) -> List[st
 
     def _get_top_n_actors(html, n):
         soup = BeautifulSoup(html, 'html.parser')
-        cast_items = soup.find_all('div', {'data-qa': 'cast-crew-item'})
+        cast_items = soup.find_all('a', {'data-qa': 'person-item'})
         
         top_actors = []
-        
-        for i, cast_item in enumerate(cast_items):
+        i = 0
+        for cast_item in cast_items:
             if i == n:
                 break
-            
-            actor_name = cast_item.find('p').text.strip()
-            top_actors.append(actor_name)
-        
+            name = cast_item.find('p', {'data-qa': 'person-name'}).text
+            role = cast_item.find('p', {'data-qa': 'person-role'}).text
+            if "Director" in role:
+                continue
+            top_actors.append(name)
+            i += 1
         return top_actors
+
 
     return _get_top_n_actors(content, max_actors)
 
@@ -318,4 +315,8 @@ def critics_consensus(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
 
-    return _extract(content,'<span data-qa="critics-consensus">','</span>')
+    soup = BeautifulSoup(content, 'html.parser')
+
+    return soup.find('div', {'id': 'critics-consensus'}).text.replace("Critics Consensus", "").replace("\nRead Critics Reviews", "").strip()
+    
+
