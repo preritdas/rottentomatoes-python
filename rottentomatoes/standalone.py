@@ -1,15 +1,15 @@
 """Standalone functions to fetch attributes about a movie."""
-# Non-local imports
-import json
-from typing import List, Union
-from xml.dom.minidom import TypeInfo
-
-import requests  # interact with RT website
 from bs4 import BeautifulSoup
 
-from . import search, utils
+# Non-local imports
+import json
+import requests  # interact with RT website
+from typing import List, Union
+
 # Project modules
 from .exceptions import *
+from . import search
+from . import utils
 
 
 def _movie_url(movie_name: str) -> str:
@@ -155,7 +155,7 @@ def tomatometer(movie_name: str, content: str = None) -> Union[int, None]:
         content = _request(movie_name)
 
     value = _get_score_details(content)['tomatometerScore']
-    
+
     if not value:
         return None
     return value
