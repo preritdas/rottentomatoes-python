@@ -1,15 +1,15 @@
 """Standalone functions to fetch attributes about a movie."""
-from bs4 import BeautifulSoup
-
 # Non-local imports
 import json
-import requests  # interact with RT website
 from typing import List, Union
+from xml.dom.minidom import TypeInfo
 
+import requests  # interact with RT website
+from bs4 import BeautifulSoup
+
+from . import search, utils
 # Project modules
 from .exceptions import *
-from . import search
-from . import utils
 
 
 def _movie_url(movie_name: str) -> str:
@@ -79,14 +79,15 @@ def _get_score_details(content: str) -> object:
     Returns:
         object: The scoreboard data for the movie.
     """
-    return json.loads(
-        _extract(
-            content,
-            '<script id="scoreDetails" type="application/json">',
-            '</script>'
-        )
-    )
+    soup = BeautifulSoup(content, 'html.parser')
 
+    tomatometer_score = int(soup.find('rt-button', {'slot': 'criticsScore'}).text.strip("%\n"))
+    audience_score = int(soup.find('rt-button', {'slot': 'audienceScore'}).text.strip("%\n"))
+    rating = soup.find('rt-text', {'slot': 'ratingsCode'}).text
+    release_date = soup.find('rt-text', {'slot': 'releaseDate'}).text.strip("Released ")
+    duration = soup.find('rt-text', {'slot': 'duration'}).text
+    
+    return {"tomatometerScore": tomatometer_score, "audienceScore": audience_score, "rating": rating, "releaseDate": release_date, "duration": duration}
 
 def _request(movie_name: str, raw_url: bool = False, force_url: str = "") -> str:
     """Scrapes Rotten Tomatoes for the raw website data, to be
@@ -153,12 +154,11 @@ def tomatometer(movie_name: str, content: str = None) -> Union[int, None]:
     if content is None:
         content = _request(movie_name)
 
-    scoreboard = _get_score_details(content)['scoreboard']['tomatometerScore']
-
-    if "value" not in scoreboard:
+    value = _get_score_details(content)['tomatometerScore']
+    
+    if not value:
         return None
-
-    return scoreboard["value"]
+    return value
 
 
 def audience_score(movie_name: str, content: str = None) -> Union[int, None]:
@@ -180,12 +180,11 @@ def audience_score(movie_name: str, content: str = None) -> Union[int, None]:
     if content is None:
         content = _request(movie_name)
 
-    scoreboard = _get_score_details(content)['scoreboard']['audienceScore']
+    value = _get_score_details(content)['audienceScore']
 
-    if "value" not in scoreboard:
+    if not value:
         return None
-    
-    return scoreboard["value"]
+    return value
 
 
 def genres(movie_name: str, content: str = None) -> List[str]:
@@ -237,7 +236,7 @@ def rating(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
 
-    return _get_score_details(content)['scoreboard']['rating']
+    return _get_score_details(content)['rating']
 
 
 def duration(movie_name: str, content: str = None) -> str:
@@ -245,10 +244,7 @@ def duration(movie_name: str, content: str = None) -> str:
     if content is None:
         content = _request(movie_name)
 
-    return_duration = _get_score_details(
-        content)['scoreboard']['info'].split(',')[-1]
-
-    return return_duration.replace(' ', '', 1)
+    return _get_score_details(content)['duration']
 
 
 def year_released(movie_name: str, content: str = None) -> str:
@@ -257,7 +253,7 @@ def year_released(movie_name: str, content: str = None) -> str:
         content = _request(movie_name)
 
     release_year = _get_score_details(
-        content)['scoreboard']['info'].split(',')[0]
+        content)['releaseDate'].split(',')[1].strip()
 
     return release_year
 
