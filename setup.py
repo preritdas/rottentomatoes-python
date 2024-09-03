@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 DESCRIPTION = (
     "Scrape Rotten Tomatoes's website for basic information on movies, without the "
     "use of their hard-to-attain official REST API."
