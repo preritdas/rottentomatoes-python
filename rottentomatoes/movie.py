@@ -1,7 +1,6 @@
 """Contains classes that auto fetch all attributes."""
 from . import standalone
 
-
 class Movie:
     """
     Accepts the name of a movie and automatically fetches all attributes.
@@ -29,12 +28,14 @@ class Movie:
         self.image = standalone.image(self.movie_title, content=content)
         self.url = standalone.url(self.movie_title, content=content)
         self.critics_consensus = standalone.critics_consensus(self.movie_title, content=content)
+        self.num_of_reviews = standalone.num_of_reviews(self.movie_title, content=content)
 
     def __str__(self) -> str:
         return f"{self.movie_title.title()}, {self.rating}, {self.duration}.\n" \
             f"Released in {self.year_released}.\n" \
             f"Directed by {', '.join(self.directors)}.\n" \
             f"Tomatometer: {self.tomatometer}\n" \
+            f"Number of Critic Reviews: {self.num_of_reviews}\n" \
             f"Weighted score: {self.weighted_score}\n" \
             f"Audience Score: {self.audience_score}\nGenres - {self.genres}\n" \
             f"Prominent actors: {', '.join(self.actors)}."

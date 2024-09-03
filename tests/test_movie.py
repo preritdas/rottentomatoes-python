@@ -12,3 +12,4 @@ def test_movie():
     assert m.duration == "2h 11m"
     assert all(genre in m.genres for genre in {"Action", "Adventure"})
     assert m.rating == "PG-13"
+    assert m.num_of_reviews == 482

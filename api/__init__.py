@@ -1,10 +1,11 @@
 """Basic API to interact with the rottentomatoes-python package."""
+from typing import Dict, List, Any
+
 from fastapi import FastAPI
 
 import rottentomatoes as rt
 
 from . import models
-
 
 app = FastAPI(
     title = "Rotten Tomatoes Scraper API",
@@ -13,7 +14,7 @@ app = FastAPI(
 )
 
 
-def build_movie(movie_name: str = "", force_url: str = "") -> models.MovieAttributes:
+def build_movie(movie_name: str = "", force_url: str = "") -> dict[str | Any, Any]:
     """Construct a dictionary adhering to MovieAttributes."""
     if force_url:
         movie = rt.Movie(force_url=force_url)
@@ -23,6 +24,7 @@ def build_movie(movie_name: str = "", force_url: str = "") -> models.MovieAttrib
     return {
         "name": movie.movie_title,
         "tomatometer": movie.tomatometer,
+        "number_of_reviews": movie.num_of_reviews,
         "audience_score": movie.audience_score,
         "weighted_score": movie.weighted_score,
         "genres": movie.genres,
@@ -30,7 +32,7 @@ def build_movie(movie_name: str = "", force_url: str = "") -> models.MovieAttrib
         "duration": movie.duration,
         "year": movie.year_released,
         "actors": movie.actors,
-        "directors": movie.directors
+        "directors": movie.directors,
     }
 
 
@@ -41,7 +43,7 @@ async def test_homepage() -> str:
 
 
 @app.get("/movie/{movie_name}", tags=["General"])
-async def movie_attributes(movie_name: str) -> models.MovieAttributes:
+async def movie_attributes(movie_name: str) -> dict[str | Any, Any]:
     """Get a movie's attributes."""
     if "_" in movie_name:
         movie_name = movie_name.replace("_", " ")
@@ -50,7 +52,7 @@ async def movie_attributes(movie_name: str) -> models.MovieAttributes:
 
 
 @app.get("/search/{movie_name}", tags=["General"])
-async def multi_movie_search(movie_name: str) -> models.Movies:
+async def multi_movie_search(movie_name: str) -> dict[str, list[dict[str | Any, Any]]]:
     """Search for the movie and return a list of valid results."""
     results = rt.search.filter_searches(results=rt.search.search_results(movie_name))
 
