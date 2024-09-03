@@ -16,6 +16,7 @@ class Movie:
             content = standalone._request(movie_name=movie_title)
 
         self.movie_title = standalone.movie_title(movie_title, content=content)
+        self.synopsis = standalone.synopsis(movie_title, content=content)
         self.tomatometer = standalone.tomatometer(self.movie_title, content=content)
         self.audience_score = standalone.audience_score(self.movie_title, content=content)
         self.weighted_score = standalone.weighted_score(self.movie_title, content=content)
@@ -32,6 +33,7 @@ class Movie:
 
     def __str__(self) -> str:
         return f"{self.movie_title.title()}, {self.rating}, {self.duration}.\n" \
+            f"Synopsis: {self.synopsis}\n" \
             f"Released in {self.year_released}.\n" \
             f"Directed by {', '.join(self.directors)}.\n" \
             f"Tomatometer: {self.tomatometer}\n" \

@@ -86,11 +86,12 @@ def _get_score_details(content: str) -> object:
     rating = soup.find('rt-text', {'slot': 'ratingsCode'}).text
     release_date = soup.find('rt-text', {'slot': 'releaseDate'}).text.strip("Released ")
     duration = soup.find('rt-text', {'slot': 'duration'}).text
-
     num_of_reviews_tomatometer = int(soup.find('rt-link', {'slot': 'criticsReviews'}).text.strip().split(" ")[0])
+    synopsis = soup.find('rt-text', {'slot': 'content'}).text.strip()
 
     return {"tomatometerScore": tomatometer_score, "audienceScore": audience_score, "rating": rating,
-            "releaseDate": release_date, "duration": duration, "num_of_reviews_tomatometer": num_of_reviews_tomatometer}
+            "releaseDate": release_date, "duration": duration, "num_of_reviews_tomatometer": num_of_reviews_tomatometer,
+            "synopsis": synopsis}
 
 
 def _request(movie_name: str, raw_url: bool = False, force_url: str = "") -> str:
@@ -147,6 +148,17 @@ def num_of_reviews(movie_name: str, content: str = None) -> Union[int, None]:
 
     if not value:
         return None
+    return value
+
+
+def synopsis(movie_name: str, content: str = None) -> str:
+    """ Search for the movie and return the synopsis """
+
+    if content is None:
+        content = _request(movie_name)
+
+    value = _get_score_details(content)['synopsis']
+
     return value
 
 
