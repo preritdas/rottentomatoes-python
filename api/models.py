@@ -14,6 +14,7 @@ class MovieAttributes(BaseModel):
     """Output, movie attributes."""
     name: str = Field(..., title="Name of the movie according to its page.")
     tomatometer: int | None = Field(..., title="Rotten Tomatoes Tomatometer.")
+    num_of_reviews: int | None = Field(..., title="Number of critic reviews")
     audience_score: int | None = Field(..., title="Rotten Tomatoes audience score.")
     weighted_score: int | None = Field(
         ...,
@@ -31,6 +32,7 @@ class MovieAttributes(BaseModel):
         "example": {
             "name": "Bad Boys for Life",
             "tomatometer": 76,
+            "num_of_reviews": 270,
             "audience_score": 96,
             "weighted_score": 82,
             "genres": ["Action", "Comedy"],
@@ -61,6 +63,7 @@ class Movies(BaseModel):
                 {
                     "name": "Bad Boys for Life",
                     "tomatometer": 76,
+                    "num_of_reviews": 270,
                     "audience_score": 96,
                     "weighted_score": 82,
                     "genres": ["Action", "Comedy"],
@@ -79,6 +82,7 @@ class Movies(BaseModel):
                 {
                     "name": "Bad Boys II",
                     "tomatometer": 23,
+                    "num_of_reviews": 186,
                     "audience_score": 78,
                     "weighted_score": 41,
                     "genres": ["Action", "Comedy"],
@@ -97,6 +101,7 @@ class Movies(BaseModel):
                 {
                     "name": "Bad Boys",
                     "tomatometer": 43,
+                    "num_of_reviews": 69,
                     "audience_score": 78,
                     "weighted_score": 54,
                     "genres": ["Action", "Comedy"],
@@ -115,6 +120,7 @@ class Movies(BaseModel):
                 {
                     "name": "Bad Boys",
                     "tomatometer": 90,
+                    "num_of_reviews": 20,
                     "audience_score": 82,
                     "weighted_score": 87,
                     "genres": ["Drama"],

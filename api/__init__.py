@@ -1,10 +1,11 @@
 """Basic API to interact with the rottentomatoes-python package."""
+from typing import Dict, List, Any
+
 from fastapi import FastAPI
 
 import rottentomatoes as rt
 
 from . import models
-
 
 app = FastAPI(
     title = "Rotten Tomatoes Scraper API",
@@ -23,6 +24,7 @@ def build_movie(movie_name: str = "", force_url: str = "") -> models.MovieAttrib
     return {
         "name": movie.movie_title,
         "tomatometer": movie.tomatometer,
+        "number_of_reviews": movie.num_of_reviews,
         "audience_score": movie.audience_score,
         "weighted_score": movie.weighted_score,
         "genres": movie.genres,
@@ -30,7 +32,7 @@ def build_movie(movie_name: str = "", force_url: str = "") -> models.MovieAttrib
         "duration": movie.duration,
         "year": movie.year_released,
         "actors": movie.actors,
-        "directors": movie.directors
+        "directors": movie.directors,
     }
 
 

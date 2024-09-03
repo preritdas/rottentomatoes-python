@@ -46,7 +46,7 @@ def test_year_released(forrest_gump_content):
 
 def test_actors(forrest_gump_content):
     res = standalone.actors("forrest gump", 5, forrest_gump_content)
-    
+
     for actor in [
         'Tom Hanks', 'Robin Wright', 'Gary Sinise', 'Mykelti Williamson', 'Sally Field'
     ]:
@@ -69,6 +69,14 @@ def test_url(happy_gilmore_content):
 
 
 def test_critics_consensus(happy_gilmore_content):
-    assert standalone.critics_consensus("happy gilmore", happy_gilmore_content) == \
-        "Those who enjoy Adam Sandler's schtick will find plenty to love in this gleefully juvenile take on professional golf; "+\
+    assert standalone.critics_consensus("happy gilmore", happy_gilmore_content) == (
+        "Those who enjoy Adam Sandler's schtick will find plenty to love "
+        "in this gleefully juvenile take on professional golf; "
         "those who don't, however, will find it unfunny and forgettable."
+    )
+
+
+def test_num_of_reviews(happy_gilmore_content):
+    num_reviews: int = standalone.num_of_reviews("happy gilmore", happy_gilmore_content)
+    assert isinstance(num_reviews, int)
+    assert num_reviews >= 55

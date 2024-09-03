@@ -47,7 +47,7 @@ def _extract(content: str, start_string: str, end_string: str) -> str:
         return None
 
     end_idx = content.find(end_string, start_idx)
-    return content[start_idx+len(start_string):end_idx]
+    return content[start_idx + len(start_string):end_idx]
 
 
 def _get_schema_json_ld(content: str) -> object:
@@ -86,8 +86,12 @@ def _get_score_details(content: str) -> object:
     rating = soup.find('rt-text', {'slot': 'ratingsCode'}).text
     release_date = soup.find('rt-text', {'slot': 'releaseDate'}).text.strip("Released ")
     duration = soup.find('rt-text', {'slot': 'duration'}).text
-    
-    return {"tomatometerScore": tomatometer_score, "audienceScore": audience_score, "rating": rating, "releaseDate": release_date, "duration": duration}
+
+    num_of_reviews_tomatometer = int(soup.find('rt-link', {'slot': 'criticsReviews'}).text.strip().split(" ")[0])
+
+    return {"tomatometerScore": tomatometer_score, "audienceScore": audience_score, "rating": rating,
+            "releaseDate": release_date, "duration": duration, "num_of_reviews_tomatometer": num_of_reviews_tomatometer}
+
 
 def _request(movie_name: str, raw_url: bool = False, force_url: str = "") -> str:
     """Scrapes Rotten Tomatoes for the raw website data, to be
@@ -111,7 +115,7 @@ def _request(movie_name: str, raw_url: bool = False, force_url: str = "") -> str
     else:
         search_result = search.top_movie_result(movie_name)
         rt_url = search_result.url
-    
+
     response = requests.get(rt_url, headers=utils.REQUEST_HEADERS)
 
     if response.status_code == 404:
@@ -130,7 +134,20 @@ def movie_title(movie_name: str, content: str = None) -> str:
 
     soup = BeautifulSoup(content, 'html.parser')
     return soup.find('h1', {"slot": "titleIntro"}).text.strip()
-    
+
+
+def num_of_reviews(movie_name: str, content: str = None) -> Union[int, None]:
+    """Search for the movie and return the number of critic
+    reviews for the Tomatometer score."""
+
+    if content is None:
+        content = _request(movie_name)
+
+    value = _get_score_details(content)['num_of_reviews_tomatometer']
+
+    if not value:
+        return None
+    return value
 
 
 def tomatometer(movie_name: str, content: str = None) -> Union[int, None]:
@@ -226,7 +243,7 @@ def weighted_score(movie_name: str, content: str = None) -> Union[int, None]:
     if a_score is None:
         return t_score
 
-    return int((2/3) * t_score + ((1/3) * a_score))
+    return int((2 / 3) * t_score + ((1 / 3) * a_score))
 
 
 def rating(movie_name: str, content: str = None) -> str:
@@ -266,7 +283,7 @@ def actors(movie_name: str, max_actors: int = 5, content: str = None) -> List[st
     def _get_top_n_actors(html, n):
         soup = BeautifulSoup(html, 'html.parser')
         cast_items = soup.find_all('a', {'data-qa': 'person-item'})
-        
+
         top_actors = []
         i = 0
         for cast_item in cast_items:
@@ -279,7 +296,6 @@ def actors(movie_name: str, max_actors: int = 5, content: str = None) -> List[st
             top_actors.append(name)
             i += 1
         return top_actors
-
 
     return _get_top_n_actors(content, max_actors)
 
@@ -317,6 +333,5 @@ def critics_consensus(movie_name: str, content: str = None) -> str:
 
     soup = BeautifulSoup(content, 'html.parser')
 
-    return soup.find('div', {'id': 'critics-consensus'}).text.replace("Critics Consensus", "").replace("\nRead Critics Reviews", "").strip()
-    
-
+    return soup.find('div', {'id': 'critics-consensus'}).text.replace("Critics Consensus", "").replace(
+        "\nRead Critics Reviews", "").strip()
