@@ -14,7 +14,7 @@ app = FastAPI(
 )
 
 
-def build_movie(movie_name: str = "", force_url: str = "") -> dict[str | Any, Any]:
+def build_movie(movie_name: str = "", force_url: str = "") -> models.MovieAttributes:
     """Construct a dictionary adhering to MovieAttributes."""
     if force_url:
         movie = rt.Movie(force_url=force_url)
@@ -43,7 +43,7 @@ async def test_homepage() -> str:
 
 
 @app.get("/movie/{movie_name}", tags=["General"])
-async def movie_attributes(movie_name: str) -> dict[str | Any, Any]:
+async def movie_attributes(movie_name: str) -> models.MovieAttributes:
     """Get a movie's attributes."""
     if "_" in movie_name:
         movie_name = movie_name.replace("_", " ")
@@ -52,7 +52,7 @@ async def movie_attributes(movie_name: str) -> dict[str | Any, Any]:
 
 
 @app.get("/search/{movie_name}", tags=["General"])
-async def multi_movie_search(movie_name: str) -> dict[str, list[dict[str | Any, Any]]]:
+async def multi_movie_search(movie_name: str) -> models.Movies:
     """Search for the movie and return a list of valid results."""
     results = rt.search.filter_searches(results=rt.search.search_results(movie_name))
 
