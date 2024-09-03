@@ -4,6 +4,7 @@ __pycache__/
 sampleresponse.txt
 .DS_Store
 .vscode/
+.idea/
 
 # Dist files
 removedists

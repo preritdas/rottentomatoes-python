@@ -23,6 +23,7 @@ def build_movie(movie_name: str = "", force_url: str = "") -> models.MovieAttrib
 
     return {
         "name": movie.movie_title,
+        "synopsis": movie.synopsis,
         "tomatometer": movie.tomatometer,
         "number_of_reviews": movie.num_of_reviews,
         "audience_score": movie.audience_score,

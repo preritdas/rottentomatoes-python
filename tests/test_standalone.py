@@ -60,12 +60,12 @@ def test_directors(happy_gilmore_content):
 
 def test_image(happy_gilmore_content):
     assert standalone.image("happy gilmore", happy_gilmore_content) == \
-        'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p17735_p_v8_aj.jpg'
+           'https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p17735_p_v8_aj.jpg'
 
 
 def test_url(happy_gilmore_content):
     assert standalone.url("happy gilmore", happy_gilmore_content) == \
-        'https://www.rottentomatoes.com/m/happy_gilmore'
+           'https://www.rottentomatoes.com/m/happy_gilmore'
 
 
 def test_critics_consensus(happy_gilmore_content):
@@ -80,3 +80,13 @@ def test_num_of_reviews(happy_gilmore_content):
     num_reviews: int = standalone.num_of_reviews("happy gilmore", happy_gilmore_content)
     assert isinstance(num_reviews, int)
     assert num_reviews >= 55
+
+
+def test_synopsis(happy_gilmore_content):
+    assert standalone.synopsis("happy gilmore", happy_gilmore_content) == (
+        "All Happy Gilmore (Adam Sandler) has ever wanted is to be a professional hockey player. But he soon "
+        "discovers he may actually have a talent for playing an entirely different sport: golf. When his grandmother "
+        "(Frances Bay) learns she is about to lose her home, Happy joins a golf tournament to try and win enough "
+        "money to buy it for her. With his powerful driving skills and foulmouthed attitude, Happy becomes an "
+        "unlikely golf hero -- much to the chagrin of the well-mannered golf professionals."
+    )
