@@ -32,12 +32,14 @@ class MovieAttributes(BaseModel):
     model_config = ConfigDict(json_schema_extra={
         "example": {
             "name": "Bad Boys for Life",
-            "synopsis": "The wife and son of a Mexican drug lord embark on a vengeful quest to kill all those involved "
-                        "in his trial and imprisonment -- including Miami Detective Mike Lowrey. When Mike gets "
-                        "wounded, he teams up with partner Marcus Burnett and AMMO -- a special tactical squad -- to "
-                        "bring the culprits to justice. But the old-school, wisecracking cops must soon learn to get "
-                        "along with their new elite counterparts if they are to take down the vicious cartel that "
-                        "threatens their lives.",
+            "synopsis": (
+                "The wife and son of a Mexican drug lord embark on a vengeful quest to kill all those involved "
+                "in his trial and imprisonment -- including Miami Detective Mike Lowrey. When Mike gets "
+                "wounded, he teams up with partner Marcus Burnett and AMMO -- a special tactical squad -- to "
+                "bring the culprits to justice. But the old-school, wisecracking cops must soon learn to get "
+                "along with their new elite counterparts if they are to take down the vicious cartel that "
+                "threatens their lives."
+            ),
             "tomatometer": 76,
             "num_of_reviews": 270,
             "audience_score": 96,
