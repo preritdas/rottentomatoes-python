@@ -69,11 +69,14 @@ def test_url(happy_gilmore_content):
 
 
 def test_critics_consensus(happy_gilmore_content):
-    assert standalone.critics_consensus("happy gilmore", happy_gilmore_content) == \
-           "Those who enjoy Adam Sandler's schtick will find plenty to love in this gleefully juvenile take on professional golf; " + \
-           "those who don't, however, will find it unfunny and forgettable."
+    assert standalone.critics_consensus("happy gilmore", happy_gilmore_content) == (
+        "Those who enjoy Adam Sandler's schtick will find plenty to love "
+        "in this gleefully juvenile take on professional golf; "
+        "those who don't, however, will find it unfunny and forgettable."
+    )
 
 
 def test_num_of_reviews(happy_gilmore_content):
-    assert isinstance(standalone.num_of_reviews("happy gilmore", happy_gilmore_content),
-                      int) and standalone.num_of_reviews("happy gilmore", happy_gilmore_content) >= 55
+    num_reviews: int = standalone.num_of_reviews("happy gilmore", happy_gilmore_content)
+    assert isinstance(num_reviews, int)
+    assert num_reviews >= 55
