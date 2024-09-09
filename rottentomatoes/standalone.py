@@ -50,7 +50,7 @@ def _extract(content: str, start_string: str, end_string: str) -> str:
     return content[start_idx + len(start_string):end_idx]
 
 
-def _get_schema_json_ld(content: str) -> object:
+def _get_schema_json_ld(content: str) -> dict:
     """Retrieves the schema.org data model for a movie. This data
     typically contains Tomatometer score, genre etc.
 
@@ -69,7 +69,7 @@ def _get_schema_json_ld(content: str) -> object:
     )
 
 
-def _get_score_details(content: str) -> object:
+def _get_score_details(content: str) -> dict[str, str | int | None]:
     """Retrieves the scoreboard data for a movie. Scoreboard data
     typically contains audience score, ratings, duration etc.
 
