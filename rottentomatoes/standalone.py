@@ -83,7 +83,10 @@ def _get_score_details(content: str) -> object:
 
     tomatometer_score = int(soup.find('rt-button', {'slot': 'criticsScore'}).text.strip("%\n"))
     audience_score = int(soup.find('rt-button', {'slot': 'audienceScore'}).text.strip("%\n"))
-    rating = soup.find('rt-text', {'slot': 'ratingsCode'}).text
+    try:
+        rating = soup.find('rt-text', {'slot': 'ratingsCode'}).text
+    except:
+        rating = ""
     release_date = soup.find('rt-text', {'slot': 'releaseDate'}).text.strip("Released ")
     duration = soup.find('rt-text', {'slot': 'duration'}).text
     num_of_reviews_tomatometer = int(soup.find('rt-link', {'slot': 'criticsReviews'}).text.strip().split(" ")[0])
