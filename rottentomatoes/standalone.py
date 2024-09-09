@@ -81,16 +81,34 @@ def _get_score_details(content: str) -> object:
     """
     soup = BeautifulSoup(content, 'html.parser')
 
-    tomatometer_score = int(soup.find('rt-button', {'slot': 'criticsScore'}).text.strip("%\n"))
-    audience_score = int(soup.find('rt-button', {'slot': 'audienceScore'}).text.strip("%\n"))
+    try:
+        tomatometer_score = int(soup.find('rt-button', {'slot': 'criticsScore'}).text.strip("%\n"))
+    except AttributError:
+        tomatometer_score = None
+    try:
+        audience_score = int(soup.find('rt-button', {'slot': 'audienceScore'}).text.strip("%\n"))
+    except AttributError:
+        audience_score = None
     try:
         rating = soup.find('rt-text', {'slot': 'ratingsCode'}).text
-    except:
-        rating = ""
-    release_date = soup.find('rt-text', {'slot': 'releaseDate'}).text.strip("Released ")
-    duration = soup.find('rt-text', {'slot': 'duration'}).text
-    num_of_reviews_tomatometer = int(soup.find('rt-link', {'slot': 'criticsReviews'}).text.strip().split(" ")[0])
-    synopsis = soup.find('rt-text', {'slot': 'content'}).text.strip()
+    except AttributeError:
+        rating = None
+    try:
+        release_date = soup.find('rt-text', {'slot': 'releaseDate'}).text.strip("Released ")
+    except AttributeError:
+        release_date = None
+    try:
+        duration = soup.find('rt-text', {'slot': 'duration'}).text
+    except AttributeError:
+        duration = None
+    try:
+        num_of_reviews_tomatometer = int(soup.find('rt-link', {'slot': 'criticsReviews'}).text.strip().split(" ")[0])
+    except AttributeError:
+        num_of_reviews_tomatometer = None
+    try:
+        synopsis = soup.find('rt-text', {'slot': 'content'}).text.strip()
+    except AttributeError:
+        synopsis = None
 
     return {"tomatometerScore": tomatometer_score, "audienceScore": audience_score, "rating": rating,
             "releaseDate": release_date, "duration": duration, "num_of_reviews_tomatometer": num_of_reviews_tomatometer,
