@@ -69,7 +69,7 @@ def _get_schema_json_ld(content: str) -> dict:
     )
 
 
-def _get_score_details(content: str) -> dict[str, str | int | None]:
+def _get_score_details(content: str) -> dict[str, Union[str, int, None]]:
     """Retrieves the scoreboard data for a movie. Scoreboard data
     typically contains audience score, ratings, duration etc.
 
