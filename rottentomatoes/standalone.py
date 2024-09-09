@@ -83,11 +83,11 @@ def _get_score_details(content: str) -> Dict[str, Union[str, int, None]]:
 
     try:
         tomatometer_score = int(soup.find('rt-button', {'slot': 'criticsScore'}).text.strip("%\n"))
-    except AttributError:
+    except AttributeError:
         tomatometer_score = None
     try:
         audience_score = int(soup.find('rt-button', {'slot': 'audienceScore'}).text.strip("%\n"))
-    except AttributError:
+    except AttributeError:
         audience_score = None
     try:
         rating = soup.find('rt-text', {'slot': 'ratingsCode'}).text
