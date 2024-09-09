@@ -75,6 +75,10 @@ print(movie)
 print(movie.weighted_score)
 # Output: 66
 # Type: int
+
+print(movie.url)
+# Output: 'https://www.rottentomatoes.com/m/top_gun_maverick'
+# Type: str
 ```
 
 ## Exceptions
