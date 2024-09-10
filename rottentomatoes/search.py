@@ -10,9 +10,10 @@ from .exceptions import LookupError
 
 class SearchListing:
     """A search listing from the Rotten Tomatoes search page."""
-    def __init__(self, has_tomatometer: bool, is_movie: bool, url: str) -> None:
+    def __init__(self, has_tomatometer: bool, is_movie: bool, url: str, release: str) -> None:
         self.has_tomatometer = has_tomatometer
         self.is_movie = is_movie
+        self.release = release
         self.url = str(url)
         
     @classmethod
@@ -30,6 +31,15 @@ class SearchListing:
         tomato_snip = html_snippet[tomato_loc:tomato_loc+5]
         meter = tomato_snip.split('"')[1]
         has_tomatometer = bool(meter)
+
+        # Find the release year
+        try:
+            release_qry = "releaseyear="
+            release_loc = html_snippet.find(release_qry) + len(release_qry)
+            release_snip = html_snippet[release_loc:release_loc+7]
+            release = release_snip.split('"')[1]
+        except:
+            release = ""
         
         # Find the url
         urls = re.findall(r'a href="(.*?)"', html_snippet)
@@ -38,7 +48,7 @@ class SearchListing:
         # Determine if it's a movie
         is_movie = "/m/" in url
         
-        return cls(has_tomatometer=has_tomatometer, is_movie=is_movie, url=url)
+        return cls(has_tomatometer=has_tomatometer, is_movie=is_movie, url=url, release=release)
     
     def __str__(self) -> str:
         """Represent the SearchListing object."""
@@ -63,15 +73,15 @@ def search_results(name: str) -> List[SearchListing]:
     return [SearchListing.from_html(snippet) for snippet in snippets]
 
 
-def filter_searches(results: List[SearchListing]) -> List[SearchListing]:
+def filter_searches(results: List[SearchListing], release: str = "") -> List[SearchListing]:
     """Filters search results for valid movies."""
-    return list(filter(lambda result: result.is_movie and result.has_tomatometer, results))
+    return list(filter(lambda result: result.is_movie and result.has_tomatometer and release in result.release, results))
 
 
-def top_movie_result(name: str) -> SearchListing:
+def top_movie_result(name: str, release = "") -> SearchListing:
     """Get the first movie result that has a tomatometer."""
     results = search_results(name)
-    filtered = filter_searches(results)
+    filtered = filter_searches(results,release)
     
     if not filtered:
         raise LookupError("No movies found.")
