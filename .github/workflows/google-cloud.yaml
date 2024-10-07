@@ -29,5 +29,5 @@ jobs:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
           
       - name: Deploy to GCP App Engine
-        uses: 'google-github-actions/deploy-appengine@v0'
+        uses: 'google-github-actions/deploy-appengine@v2'
         
