@@ -115,7 +115,7 @@ def _get_score_details(content: str) -> Dict[str, Union[str, int, None]]:
             "synopsis": synopsis}
 
 
-def _request(movie_name: str, raw_url: bool = False, force_url: str = "") -> str:
+def _request(movie_name: str, raw_url: bool = False, force_url: str = "", release: str = "") -> str:
     """Scrapes Rotten Tomatoes for the raw website data, to be
     passed to each standalone function for parsing.
 
@@ -135,7 +135,7 @@ def _request(movie_name: str, raw_url: bool = False, force_url: str = "") -> str
     if raw_url or force_url:
         rt_url = _movie_url(movie_name) if movie_name else force_url
     else:
-        search_result = search.top_movie_result(movie_name)
+        search_result = search.top_movie_result(movie_name,release)
         rt_url = search_result.url
 
     response = requests.get(rt_url, headers=utils.REQUEST_HEADERS)
@@ -149,21 +149,21 @@ def _request(movie_name: str, raw_url: bool = False, force_url: str = "") -> str
     return response.text
 
 
-def movie_title(movie_name: str, content: str = None) -> str:
+def movie_title(movie_name: str, content: str = None, release: str = "") -> str:
     """Search for the movie and return the queried title."""
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name,release)
 
     soup = BeautifulSoup(content, 'html.parser')
     return soup.find('h1', {"slot": "titleIntro"}).text.strip()
 
 
-def num_of_reviews(movie_name: str, content: str = None) -> Union[int, None]:
+def num_of_reviews(movie_name: str, content: str = None, release: str = "") -> Union[int, None]:
     """Search for the movie and return the number of critic
     reviews for the Tomatometer score."""
 
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     value = _get_score_details(content)['num_of_reviews_tomatometer']
 
@@ -172,18 +172,18 @@ def num_of_reviews(movie_name: str, content: str = None) -> Union[int, None]:
     return value
 
 
-def synopsis(movie_name: str, content: str = None) -> str:
+def synopsis(movie_name: str, content: str = None, release: str = "") -> str:
     """ Search for the movie and return the synopsis """
 
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     value = _get_score_details(content)['synopsis']
 
     return value
 
 
-def tomatometer(movie_name: str, content: str = None) -> Union[int, None]:
+def tomatometer(movie_name: str, content: str = None, release: str = "") -> Union[int, None]:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. 
 
@@ -200,7 +200,7 @@ def tomatometer(movie_name: str, content: str = None) -> Union[int, None]:
         None: If the movie doesn't have a tomatometer.
     """
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     value = _get_score_details(content)['tomatometerScore']
 
@@ -209,7 +209,7 @@ def tomatometer(movie_name: str, content: str = None) -> Union[int, None]:
     return value
 
 
-def audience_score(movie_name: str, content: str = None) -> Union[int, None]:
+def audience_score(movie_name: str, content: str = None, release: str = "") -> Union[int, None]:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. 
 
@@ -226,7 +226,7 @@ def audience_score(movie_name: str, content: str = None) -> Union[int, None]:
         None: If the movie doesn't have an audience score.
     """
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     value = _get_score_details(content)['audienceScore']
 
@@ -235,7 +235,7 @@ def audience_score(movie_name: str, content: str = None) -> Union[int, None]:
     return value
 
 
-def genres(movie_name: str, content: str = None) -> List[str]:
+def genres(movie_name: str, content: str = None, release: str = "") -> List[str]:
     """Returns an integer of the Rotten Tomatoes tomatometer
     of `movie_name`. Copies the movie url to clipboard.
 
@@ -251,21 +251,21 @@ def genres(movie_name: str, content: str = None) -> List[str]:
         list[str]: List of genres.
     """
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     return _get_schema_json_ld(content)['genre']
 
 
-def weighted_score(movie_name: str, content: str = None) -> Union[int, None]:
+def weighted_score(movie_name: str, content: str = None, release: str = "") -> Union[int, None]:
     """
     2/3 tomatometer, 1/3 audience score. Returns None if both scores are None.
     If one score is None, the other is returned.
     """
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
-    t_score = tomatometer(movie_name, content)
-    a_score = audience_score(movie_name, content)
+    t_score = tomatometer(movie_name, content, release=release)
+    a_score = audience_score(movie_name, content, release=release)
 
     if t_score is None and a_score is None:
         return None
@@ -279,26 +279,26 @@ def weighted_score(movie_name: str, content: str = None) -> Union[int, None]:
     return int((2 / 3) * t_score + ((1 / 3) * a_score))
 
 
-def rating(movie_name: str, content: str = None) -> str:
+def rating(movie_name: str, content: str = None, release: str = "") -> str:
     """Returns a `str` of PG, PG-13, R, etc."""
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     return _get_score_details(content)['rating']
 
 
-def duration(movie_name: str, content: str = None) -> str:
+def duration(movie_name: str, content: str = None, release: str = "") -> str:
     """Returns the duration, ex. 1h 32m."""
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     return _get_score_details(content)['duration']
 
 
-def year_released(movie_name: str, content: str = None) -> str:
+def year_released(movie_name: str, content: str = None, release: str = "") -> str:
     """Returns a string of the year the movie was released."""
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     release_year = _get_score_details(
         content)['releaseDate'].split(',')[1].strip()
@@ -306,12 +306,12 @@ def year_released(movie_name: str, content: str = None) -> str:
     return release_year
 
 
-def actors(movie_name: str, max_actors: int = 5, content: str = None) -> List[str]:
+def actors(movie_name: str, max_actors: int = 5, content: str = None, release: str = "") -> List[str]:
     """
     Returns a list of the top 5 actors listed by Rotten Tomatoes.
     """
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     def _get_top_n_actors(html, n):
         soup = BeautifulSoup(html, 'html.parser')
@@ -333,36 +333,36 @@ def actors(movie_name: str, max_actors: int = 5, content: str = None) -> List[st
     return _get_top_n_actors(content, max_actors)
 
 
-def directors(movie_name: str, max_directors: int = 10, content: str = None) -> List[str]:
+def directors(movie_name: str, max_directors: int = 10, content: str = None, release: str = "") -> List[str]:
     """Returns a list of all the directors listed
     by Rotten Tomatoes. Specify `max_directors` to only receive
     a certain number."""
     get_name = lambda x: x.split("/")[-1].replace("_", " ").title()
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     directors = _get_schema_json_ld(content)["director"][:max_directors]
 
     return [get_name(n["sameAs"]).replace("-", " ") for n in directors]
 
 
-def image(movie_name: str, content: str = None) -> str:
+def image(movie_name: str, content: str = None, release: str = "") -> str:
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     return _get_schema_json_ld(content)['image']
 
 
-def url(movie_name: str, content: str = None) -> str:
+def url(movie_name: str, content: str = None, release: str = "") -> str:
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     return _get_schema_json_ld(content)['url']
 
 
-def critics_consensus(movie_name: str, content: str = None) -> str:
+def critics_consensus(movie_name: str, content: str = None, release: str = "") -> str:
     if content is None:
-        content = _request(movie_name)
+        content = _request(movie_name, release)
 
     soup = BeautifulSoup(content, 'html.parser')
 
